@@ -1,0 +1,49 @@
+{
+  "status": "AID_LANE_REAUDITED_PRIVATE_QA_ONLY",
+  "dll_sha256": "4f0bacef7f634c5986b005c3f83296445b35a52f86f90572c56c993d70d5b4a2",
+  "mvid": "8709ce84-96f3-4a47-8172-3afcd523fa4d",
+  "input_save_sha256": "18a350c683dd88e9e7d82aa56f4b1fbda6205e86091dd6b3bdf9cead6a09e522",
+  "warm": {
+    "pid": 25596,
+    "id": "5001",
+    "donor": "2",
+    "recipient": "3",
+    "good": "13",
+    "quantity": 3,
+    "before": [
+      77,
+      30
+    ],
+    "after": [
+      74,
+      33
+    ],
+    "saved_sha256": "dc9e70ebad189ff1080919e1ac38be84bde01e8fa30e71bfd9a2261820be554a",
+    "expectation_sha256": "4c1269551e633cae1b943010d4c9c33bb0c9a731d4d08a2a2ce870898d7fc7a8",
+    "receipt_sha256": "e99f4c0e428e16b20f041af5996575c03e7dd60bc9019e701d06232863228393"
+  },
+  "cold": {
+    "native_replay_calls": 0,
+    "two_stock_cells": [
+      74,
+      32
+    ],
+    "stocks_after_original_simulation": [
+      73,
+      32
+    ],
+    "original_SaveData_sha256": "dc9e70ebad189ff1080919e1ac38be84bde01e8fa30e71bfd9a2261820be554a",
+    "expectation_sha256": "4c1269551e633cae1b943010d4c9c33bb0c9a731d4d08a2a2ce870898d7fc7a8",
+    "authenticated_receipt_sha256": "e99f4c0e428e16b20f041af5996575c03e7dd60bc9019e701d06232863228393"
+  },
+  "cold_pid": 24152,
+  "original_ticks_after_cold": 350,
+  "raw_artifacts": {
+    "warm_bepinex_sha256": "f7ae379db787d1631736f3a0d50f36915d279332e57f19eca55f987d4cbd80d0",
+    "cold_bepinex_sha256": "8208a965beae643131ac0656cf621c321bc47cb6f57d312817defed13ca6da47",
+    "driver_log_sha256": "c62c4b6d231a5e14abc00d27280903841268a1ab522b07bc80c208384e043a07"
+  },
+  "original_automatic_verifier_report_sha256": "fa3f8e0e436f814bca6c81a41279828c92eb050eeb3a2ed6906ee971bdf9c2ff",
+  "verification_source_sha256": "0045103ef8de8f154d8951f4091bc64740e1d70fa988526261ce149f5726fd86",
+  "new_game_started": false
+}

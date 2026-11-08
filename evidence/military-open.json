@@ -1,0 +1,23 @@
+{
+  "schema": "diplomacy-military-open-evidence-v1",
+  "dll_sha256": "4f0bacef7f634c5986b005c3f83296445b35a52f86f90572c56c993d70d5b4a2",
+  "module_id": "8709ce84-96f3-4a47-8172-3afcd523fa4d",
+  "raw_report_sha256": "f3d13a41c06f1a1ef9ed2a4ac9fab0d93b05a3f52b50c143b2fbecff2c9b2332",
+  "observation": {
+    "pid": "24024",
+    "status": "autonomous_military_observation_finished",
+    "enabled": "true",
+    "transport_verification": "true",
+    "run_contract": "true",
+    "native_bound": "true",
+    "original_simulation_owner": "true",
+    "native_attempts": "0",
+    "original_mode_acceptances": "0",
+    "recorded_original_approvals": "0",
+    "sim_tick": "4212"
+  },
+  "native_transport_and_history_cold_pass": false,
+  "cold_process_proof": null,
+  "error": "ACCEPTANCE_REFUSED: exactly one original native dispatch was not observed",
+  "enabled_by_interactive_launcher": false
+}

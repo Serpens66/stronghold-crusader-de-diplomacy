@@ -1,0 +1,51 @@
+{
+  "schema": "diplomacy-trade-cold-reference-v1",
+  "current_dll_repeated": false,
+  "raw_report_sha256": "0a81404fffa53172e89677f09089a3e367873a559b6e4556781db120d635bd3a",
+  "passed": true,
+  "dll_sha256": "9cfd3e5baa0ddde1c2c5850ca506729141e62c24c00a563871347f1ba5e15160",
+  "module_id": "8be2c777-e30b-4de4-8a64-afd81e39d087",
+  "warm": {
+    "id": "1001",
+    "before": [
+      89,
+      0,
+      187,
+      31
+    ],
+    "after": [
+      84,
+      5,
+      183,
+      35
+    ],
+    "players": [
+      2,
+      1,
+      1,
+      2
+    ],
+    "goods": [
+      13,
+      13,
+      10,
+      10
+    ],
+    "saved_sha256": "6a1d4a44018c32f5bb6af84623dfda22832851942ae2ed2fe4a3cd12187a177a",
+    "expectation_sha256": "87460364411eedae7764d6a7aa853346079c76f8945ac0ae1b30b88c081dbe50",
+    "goods_log_sha256": "d4b9d0973add2299ceea7e4d1f45b955381bc697b89dda75bdc0b3c7d1fb8b05",
+    "pid": 11960
+  },
+  "cold": {
+    "native_replay_calls": 0,
+    "four_stock_cells": [
+      84,
+      5,
+      183,
+      35
+    ],
+    "original_SaveData_sha256": "6a1d4a44018c32f5bb6af84623dfda22832851942ae2ed2fe4a3cd12187a177a",
+    "expectation_sha256": "87460364411eedae7764d6a7aa853346079c76f8945ac0ae1b30b88c081dbe50"
+  },
+  "cold_pid": 24332
+}
