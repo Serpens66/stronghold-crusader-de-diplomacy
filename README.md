@@ -1,26 +1,53 @@
 # Stronghold Crusader Diplomatie
 
-Einzelspieler-Vorabversion **2.3.11-preview.1** für Stronghold Crusader Definitive Edition, Stand 8. November 2026.
+Dieser Entwicklungsstand bündelt Diplomatie, Warenhandel, KI-Hilfe, Befehle an Verbündete und den Fürstenchat für Stronghold Crusader Definitive Edition.
 
-[Release und Downloads](https://github.com/strongholdoriginsmod-rgb/stronghold-crusader-de-diplomacy/releases/tag/v2.3.11-preview.1) · [Funktionen, Installation und Grenzen](RELEASE_NOTES.md) · [Prüfnachweise](VALIDIERUNG.md)
-
-Die Mod verbindet Diplomatie, Warenhandel mit 19 Warenarten, automatische Warenhilfe zwischen verbündeten KI-Fürsten, manuelle Verbündetenbefehle und einen lokalen Fürstenchat. Die Vorabversion ist noch keine vollständig abgenommene finale Mod. Der autonome KI-Militärsender ist beim normalen Start ausgeschaltet; nativer Mehrspielerhandel ist nicht freigegeben. Die bekannten Grenzen einschließlich Originalanfragen und Waffenruhe stehen in den Release-Notizen.
-
-## Downloads
-
-- **Windows.zip:** Vorgebaute Mod mit Einrichtung einer getrennten Spielkopie, Starter, Prüfsummen und Nachweisen. Die Einrichtung benötigt eine eigene kompatible Spielinstallation samt exakt gepinnten Entwicklungsabhängigkeiten.
-- **Source.zip:** Vollständiger aktueller Quellcode mit 196 C#-Dateien, Oberflächen-Patches, Build-Werkzeugen, Abhängigkeitsprüfsummen und veröffentlichbaren Nachweisen. Dieses ausdrücklich benannte Source-Archiv enthält den vollständigen Entwicklungsstand. Die automatisch von GitHub erzeugten Source-code-Archive beziehen sich auf die Dokumentation dieses Repository-Snapshots.
-- **SHA256SUMS.txt:** Prüfsummen der beiden Downloads.
-- **RELEASE_MANIFEST.json:** Modulkennung, DLL-Prüfsumme, Quellstand und Freigabegrenzen.
-
-## Einrichtung
-
-Windows-Archiv außerhalb der vorhandenen Spielinstallation entpacken. Python 3.11 oder neuer wird benötigt. Anschließend im entpackten Ordner ausführen:
+Der vollständige Quellcode liegt direkt im Zweig `main`. Der Ordner `src`
+enthält 196 C#-Dateien; `assets`, `references`, `tools` und `evidence` ergänzen
+Oberflächen-Patches, Abhängigkeitsprüfsummen, Werkzeuge und Spielnachweise.
+Der Einstieg für Beiträge steht in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ```powershell
-py -3 -B tools/preview.py prepare --game-source "<eigener kompatibler Spielordner>"
+git clone https://github.com/strongholdoriginsmod-rgb/stronghold-crusader-de-diplomacy.git
+cd stronghold-crusader-de-diplomacy
 ```
 
-Danach `Diplomatie starten.cmd` verwenden und ein lokales Gefecht starten. Die Quelle wird nur gelesen; Spielkopie und eigenes Profil entstehen unter `runtime/game` und `runtime/profile`. Originalspiel, fremde Mod-Binärdateien, persönliche Profile und Spielstände werden nicht mitverteilt.
+Die veröffentlichte Fassung `2.3.11-preview.1` ist eine Einzelspieler-Vorabversion.
+Funktionsumfang, tatsächliche Spielnachweise, offene Freigaben und die Einrichtung
+des vorgebauten Downloads stehen in [RELEASE_NOTES.md](RELEASE_NOTES.md).
+Der autonome KI-Militärsender ist beim normalen Spielstart ausgeschaltet.
+Vor dem ersten Start des Downloads muss die getrennte Spielkopie gemäß der
+Anleitung in den Release-Notizen eingerichtet werden.
 
-Erforderlich sind SHCDE-SE 2.14.3, APIShared 0.25.0 im gepinnten Entwicklungsstand und Bugfixes and QoL 1.0.192. Die exakten Dateiprüfsummen stehen in `references/preview-runtime.json` innerhalb des Downloads. Bei einer abweichenden Abhängigkeit bricht die Einrichtung vor dem Kopieren ab.
+## Spielen
+
+Doppelklick auf `Diplomatie starten.cmd`. Der Starter prüft Spielkopie, Abhängigkeiten und Mod-Dateien. Spiel und Spielstände liegen in `runtime/game` und `runtime/profile`. Starte im Spiel ein lokales Gefecht.
+
+Handelsangebote und registrierte Warenanfragen laufen über die Diplomatieoberfläche. Der Fürstenchat verwendet das Chatfeld links unten. Mit `@2 Nachricht` oder `@Fürstenname Nachricht` sprichst du einen KI-Fürsten direkt an. `@team Nachricht` erreicht die lebenden KI-Fürsten im eigenen bestätigten Spielteam. Ein diplomatisches Bündnis beeinflusst die Antworten. Verträge, Warenanfragen und militärische Befehle werden über die Spieloberfläche erteilt.
+
+Der lokale Spielbuild verwendet den geprüften APIShared-Entwicklungsstand. Der autonome KI-Verteidigungsversand ist im isolierten Headless-Prüfmodus verfügbar. Der native Mehrspielerhandel steht zur gesonderten Zweispielerprüfung an.
+
+## Entwickeln
+
+| Bereich | Aufgabe |
+| --- | --- |
+| `src/Diplomacy`, `src/Ui` | Beziehungen, Diplomatieoberfläche, Anfragen und Fürstenchat |
+| `src/Trade`, `src/Economy`, `src/Aid` | Handel, Bestandsbuchungen und Hilfe zwischen Verbündeten |
+| `src/Engine`, `src/World`, `src/Military` | Spielschnittstellen, Spielerrollen und militärische Befehle |
+| `src/Persistence`, `src/Networking` | Original-Spielstände, Zustimmungsprotokoll und Host-Autorität |
+| `src/Testing`, `src/Qa` | Isolierte, codegesteuerte Prüfung mit dem Originalspiel |
+
+`tools/local_game.py` verwaltet die lokale Spielkopie. `prepare --help` zeigt die benötigten Eingaben für eine neue Kopie. Der Ordner `references` enthält die Prüfsummen der referenzierten Binärdateien.
+
+```powershell
+py -3 -B tools/local_game.py index
+py -3 -B tools/local_game.py build
+py -3 -B tools/local_game.py install
+py -3 -B tools/local_game.py check
+```
+
+`index` aktualisiert nach einer Quellcodeänderung die Liste der C#-Dateien samt Prüfsummen. Der Offline-Build verwendet diese Liste und die beiden Abhängigkeitssätze aus `references`. `install` aktualisiert den lokalen Spielbuild. `tools/acceptance.py --help` beschreibt den headless Test mit separat gestarteten Originalprozessen.
+
+Der aktuelle Mod-Spielstand verwendet Schema 24. Der Leser unterstützt die bisherigen Spielstände ab Schema 2. Lokale Spiel-, Profil-, Build- und Prüfdateien liegen in den ignorierten Ordnern `runtime` und `build`.
+
+Die verifizierten Spielabläufe und die offenen Freigaben stehen in [VALIDIERUNG.md](VALIDIERUNG.md).

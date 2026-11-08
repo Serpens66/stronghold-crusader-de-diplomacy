@@ -1,0 +1,995 @@
+{
+  "source_files": [
+    {
+      "path": "Aid/AidPromiseLedger.cs",
+      "stage_path": "src/Aid/AidPromiseLedger.cs",
+      "sha256": "49cb0b36e1b4b88bd866f0b336da36b52550b1a9fb0241a0e37a542d0ebc6a9b"
+    },
+    {
+      "path": "Aid/AllianceAidAffinity.cs",
+      "stage_path": "src/Aid/AllianceAidAffinity.cs",
+      "sha256": "f3b1c70c7538c355f4a19877192fec8b4dcacc6ac2f819db7063c227d75dd3d3"
+    },
+    {
+      "path": "Aid/AutonomousAidDeliveryRuntime.cs",
+      "stage_path": "src/Aid/AutonomousAidDeliveryRuntime.cs",
+      "sha256": "423997a54e6aca174ab4040395ab5276a2230b58f3e2d1a061e1402c708f555c"
+    },
+    {
+      "path": "Aid/MutualAidIntentPlanner.cs",
+      "stage_path": "src/Aid/MutualAidIntentPlanner.cs",
+      "sha256": "57dac1bf915aa0b5d0670a91c5d123cfa2c5da31586551052b319f0532e4db32"
+    },
+    {
+      "path": "Aid/ObservedAiProcurement.cs",
+      "stage_path": "src/Aid/ObservedAiProcurement.cs",
+      "sha256": "98168e434e4c4d75602f066d4204d307eb1dc4df78046fea57b821ef364778d2"
+    },
+    {
+      "path": "Aid/ObservedAidEligibilityDiagnostic.cs",
+      "stage_path": "src/Aid/ObservedAidEligibilityDiagnostic.cs",
+      "sha256": "6f713a4ce0a79d80402dbee508b783110b7aafcfef7b295f7fd27dc6c7fa1bec"
+    },
+    {
+      "path": "Aid/RecipientFoodReliefTargetPolicy.cs",
+      "stage_path": "src/Aid/RecipientFoodReliefTargetPolicy.cs",
+      "sha256": "3df82bcdd0558cbeb88770d9f20cfa96b8a3c2346a6ffe1a7ea03fdeb003a3e5"
+    },
+    {
+      "path": "Catalogs/GeneratedCompatibilityContract.cs",
+      "stage_path": "src/Catalogs/GeneratedCompatibilityContract.cs",
+      "sha256": "55e3eeea4893cb87603bd9299478eafcd372e59b763fd1b85f96e63d05c71e24"
+    },
+    {
+      "path": "Catalogs/GeneratedDiplomacyTexts.cs",
+      "stage_path": "src/Catalogs/GeneratedDiplomacyTexts.cs",
+      "sha256": "9e13e72b0825596ee0883aae40c8603d01006dae9d3fb287c3e2197da12a66a6"
+    },
+    {
+      "path": "Catalogs/GeneratedDiplomatieContract.cs",
+      "stage_path": "src/Catalogs/GeneratedDiplomatieContract.cs",
+      "sha256": "f9707bc2a67b1d590a6897469609946a351559f198951b91fb6095117e31bdd9"
+    },
+    {
+      "path": "Catalogs/RuntimePrerequisiteCatalog.cs",
+      "stage_path": "src/Catalogs/RuntimePrerequisiteCatalog.cs",
+      "sha256": "b5b1aa25f3d6756467b2a8c3cc9dffaec52538162dffbed245b692fbdd7a043b"
+    },
+    {
+      "path": "Diagnostics/PrivateAutonomousBarterPlanDiagnostic.cs",
+      "stage_path": "src/Diagnostics/PrivateAutonomousBarterPlanDiagnostic.cs",
+      "sha256": "a5bf838ceb91ad71efb60d99e61f1a0913ef9472716d3672717549233c56a590"
+    },
+    {
+      "path": "Diagnostics/PrivateNativeBarterFourCellDiagnostic.cs",
+      "stage_path": "src/Diagnostics/PrivateNativeBarterFourCellDiagnostic.cs",
+      "sha256": "fb2c5b5c2f6d1a81943e2f43a2c0d4aec4f60f06c9a265ebd5bb552ae80d3607"
+    },
+    {
+      "path": "Diplomacy/AgreementRules.cs",
+      "stage_path": "src/Diplomacy/AgreementRules.cs",
+      "sha256": "1a6da99f728611ab437795983058ab8ae2fd5f9cbce7cbeb7e17f269bd297be3"
+    },
+    {
+      "path": "Diplomacy/CombatSafety.cs",
+      "stage_path": "src/Diplomacy/CombatSafety.cs",
+      "sha256": "1b07216cb1aeb4c1969033e38237ed2a542838bd11dc874b0c25ffc83da37932"
+    },
+    {
+      "path": "Diplomacy/DiplomacyBreachNotices.cs",
+      "stage_path": "src/Diplomacy/DiplomacyBreachNotices.cs",
+      "sha256": "d42cc37f634b1a5481090c0015ee15d6e79a9e42fb537da7af58cdbb555876e8"
+    },
+    {
+      "path": "Diplomacy/DiplomacyCastleBoundary.cs",
+      "stage_path": "src/Diplomacy/DiplomacyCastleBoundary.cs",
+      "sha256": "982b5fe520da2a94326ead7fee994a9957e65e8c511104797efbfe83c8e20fa8"
+    },
+    {
+      "path": "Diplomacy/DiplomacyEconomy.cs",
+      "stage_path": "src/Diplomacy/DiplomacyEconomy.cs",
+      "sha256": "af427c0f171e7bd4d5b81c4253849e62af82d0b12c8fa5b1728dc78df325b3ff"
+    },
+    {
+      "path": "Diplomacy/DiplomacyFeature.cs",
+      "stage_path": "src/Diplomacy/DiplomacyFeature.cs",
+      "sha256": "6b1e3a6db055d2cfddbfaea9a7849b5be9eae03fb2497767cf28a4e8e15db5db"
+    },
+    {
+      "path": "Diplomacy/DiplomacyGoodsCommands.cs",
+      "stage_path": "src/Diplomacy/DiplomacyGoodsCommands.cs",
+      "sha256": "ec9c339953424a2f021a03ddadc3d609b824dc75a70c95b32af74696438ae24f"
+    },
+    {
+      "path": "Diplomacy/DiplomacyGoodsRequests.cs",
+      "stage_path": "src/Diplomacy/DiplomacyGoodsRequests.cs",
+      "sha256": "9692fc709cde8670344ba84a3774b85145230c7a943e282d7a9a3e1cddb24289"
+    },
+    {
+      "path": "Diplomacy/DiplomacyHumanOrders.cs",
+      "stage_path": "src/Diplomacy/DiplomacyHumanOrders.cs",
+      "sha256": "7d373e635bfefa6dc35881715af379b58d4d9361f0e59868c733aef538f8b0a2"
+    },
+    {
+      "path": "Diplomacy/DiplomacyPresentationEvents.cs",
+      "stage_path": "src/Diplomacy/DiplomacyPresentationEvents.cs",
+      "sha256": "ba6c49c8a43ab6f87fc9ffe81f35253f9c1fc2396b3ecf373bb34d548695dc8e"
+    },
+    {
+      "path": "Diplomacy/DiplomacyProbe.cs",
+      "stage_path": "src/Diplomacy/DiplomacyProbe.cs",
+      "sha256": "6a9ac6a428946e12cfab48e0ae1f3c91c91fc2fdb0cd976bad7cdb444fdd962f"
+    },
+    {
+      "path": "Diplomacy/DiplomacyRelations.cs",
+      "stage_path": "src/Diplomacy/DiplomacyRelations.cs",
+      "sha256": "ac9eb19e7b947549bd7406a22c4d76dded371fb4a355b4dae81fa27ac201b854"
+    },
+    {
+      "path": "Diplomacy/DiplomacyRelationshipDecisions.cs",
+      "stage_path": "src/Diplomacy/DiplomacyRelationshipDecisions.cs",
+      "sha256": "7fcebb634f25fbbb9fb21e5b1a8437e3878e3773ff612fd519a40dbddcc3f02a"
+    },
+    {
+      "path": "Diplomacy/DiplomacyRuntimeSafety.cs",
+      "stage_path": "src/Diplomacy/DiplomacyRuntimeSafety.cs",
+      "sha256": "da72082bca7e5dde8b760ad0bf684b2adf72c21722af36a179a5343c01f9ad75"
+    },
+    {
+      "path": "Diplomacy/DiplomacySubmissionPressure.cs",
+      "stage_path": "src/Diplomacy/DiplomacySubmissionPressure.cs",
+      "sha256": "ea3ccc57c331d9c7b9b0b4aa8bbf06f1704bacb0a013c3737f9867abe82c87b6"
+    },
+    {
+      "path": "Diplomacy/DiplomacyVassalGoodsRequests.cs",
+      "stage_path": "src/Diplomacy/DiplomacyVassalGoodsRequests.cs",
+      "sha256": "b3f5ac1f5186de67d5c91e4870c506e40c1df300df106769157ffe6ba90ee79a"
+    },
+    {
+      "path": "Diplomacy/DiplomacyVassalWorkflow.cs",
+      "stage_path": "src/Diplomacy/DiplomacyVassalWorkflow.cs",
+      "sha256": "291bb7662c1bf0aa92624875c39c0fe83c2ca219ecbfe38cfedaf52f2551ea61"
+    },
+    {
+      "path": "Diplomacy/EuropeCapabilities.cs",
+      "stage_path": "src/Diplomacy/EuropeCapabilities.cs",
+      "sha256": "7fa10e7ed683d4e28222f1abb15898b014c5363f11e97d99fca5151419fea433"
+    },
+    {
+      "path": "Diplomacy/ExtensionFeatureHost.cs",
+      "stage_path": "src/Diplomacy/ExtensionFeatureHost.cs",
+      "sha256": "a47964110d2c7eb56cf13985846910459686fe1129aa46868a50064de597f550"
+    },
+    {
+      "path": "Diplomacy/Hashing.cs",
+      "stage_path": "src/Diplomacy/Hashing.cs",
+      "sha256": "c35c7afbe167fb5c55930c08fb5e3a73f6fd9a14ea7ce7e76b4dfa803cfbf278"
+    },
+    {
+      "path": "Diplomacy/HumanRosterPolicy.cs",
+      "stage_path": "src/Diplomacy/HumanRosterPolicy.cs",
+      "sha256": "533bfdef909d206b458e74eb258aa4815b58685992c54932dce6847e45ed71db"
+    },
+    {
+      "path": "Diplomacy/LivePlayerRoles.cs",
+      "stage_path": "src/Diplomacy/LivePlayerRoles.cs",
+      "sha256": "061087dc47743b3b3ca0838a3a898b4887acd54ccf415a4d9b5adfb7dddeb400"
+    },
+    {
+      "path": "Diplomacy/ManagedGoodsRequestIngress.cs",
+      "stage_path": "src/Diplomacy/ManagedGoodsRequestIngress.cs",
+      "sha256": "8d81e04480071345ece30781df091f220919fb3a88acc2a4a1c1459b32e95e99"
+    },
+    {
+      "path": "Diplomacy/ModGiftJournalBinding.cs",
+      "stage_path": "src/Diplomacy/ModGiftJournalBinding.cs",
+      "sha256": "93769f325d4fd0de3c8677e13d00eec6a85b4551fc2556e20569ed8a2f5e10b3"
+    },
+    {
+      "path": "Diplomacy/NegotiationTiming.cs",
+      "stage_path": "src/Diplomacy/NegotiationTiming.cs",
+      "sha256": "ff6576126760de8fdc13257211ff3c660889a03ef5bfdbfe4d5e04de2fe6d862"
+    },
+    {
+      "path": "Diplomacy/ObservedFrameThinAdapter.cs",
+      "stage_path": "src/Diplomacy/ObservedFrameThinAdapter.cs",
+      "sha256": "b02edb4e9a44ec65000c41c849d7f7e0e58485691785ad4d05da7ffd30e833cb"
+    },
+    {
+      "path": "Diplomacy/OriginalDayBoundary.cs",
+      "stage_path": "src/Diplomacy/OriginalDayBoundary.cs",
+      "sha256": "f71891415c628df0ebe17208cbaa262542330f90306f689a23418054cb641987"
+    },
+    {
+      "path": "Diplomacy/OriginalFrameSnapshotOnlyAdapter.cs",
+      "stage_path": "src/Diplomacy/OriginalFrameSnapshotOnlyAdapter.cs",
+      "sha256": "2d0be7fb57384cc4a11016dfe1424f3eb200ebd387e51cdac71c6dbe37c9edd5"
+    },
+    {
+      "path": "Diplomacy/OriginalProjectionValidation.cs",
+      "stage_path": "src/Diplomacy/OriginalProjectionValidation.cs",
+      "sha256": "2d6f519ad830ee3ef9b6ce45b287b34359eb41c143192b01efe4ce44c9e4d42a"
+    },
+    {
+      "path": "Diplomacy/PackageTransfer.cs",
+      "stage_path": "src/Diplomacy/PackageTransfer.cs",
+      "sha256": "8c49b01a330c1dfb66e1d075943198ee1d9330871c83517c644ad463732a9826"
+    },
+    {
+      "path": "Diplomacy/PersistentMapIdentity.cs",
+      "stage_path": "src/Diplomacy/PersistentMapIdentity.cs",
+      "sha256": "b1bd63fde28e15cc6e1ac69fcbaa70d08ce6c603a8bbc0e85b37c181b05f494a"
+    },
+    {
+      "path": "Diplomacy/PrivateMapIdentity.cs",
+      "stage_path": "src/Diplomacy/PrivateMapIdentity.cs",
+      "sha256": "97ad600cc5cdf1114aaa106f3399479130882c6631865224788c491c730a9461"
+    },
+    {
+      "path": "Diplomacy/RecordedGoodsResponseFlow.cs",
+      "stage_path": "src/Diplomacy/RecordedGoodsResponseFlow.cs",
+      "sha256": "b9f7eea707ac9f43498da1c567085fa8361bc3cbe479e2194e5401e2431879e8"
+    },
+    {
+      "path": "Diplomacy/RecordedGoodsResponseSuffix.cs",
+      "stage_path": "src/Diplomacy/RecordedGoodsResponseSuffix.cs",
+      "sha256": "1019f3fd3074024fea031f74e66b98fe8af2dab58ceafd0a20b8bfcfb14e3589"
+    },
+    {
+      "path": "Diplomacy/RequestLifecycle.cs",
+      "stage_path": "src/Diplomacy/RequestLifecycle.cs",
+      "sha256": "541d32cc4d4d674054fb3596513eda32ebf66e1d3620b5a5c06769dd5da64921"
+    },
+    {
+      "path": "Diplomacy/RuntimeBuildGuard.cs",
+      "stage_path": "src/Diplomacy/RuntimeBuildGuard.cs",
+      "sha256": "9d2e610dfef2131c70490c438b73b7a4e252e4699871c722d11a74b206592a98"
+    },
+    {
+      "path": "Diplomacy/RuntimeDecision.cs",
+      "stage_path": "src/Diplomacy/RuntimeDecision.cs",
+      "sha256": "0e94a191d868c7e37208ba28a8d171f4d50fb9776a6858f0cb4cfaeebe57d680"
+    },
+    {
+      "path": "Diplomacy/RuntimePrerequisiteOriginPolicy.cs",
+      "stage_path": "src/Diplomacy/RuntimePrerequisiteOriginPolicy.cs",
+      "sha256": "9c92420885b8c448650f0c72ac220bdb145a675c3ee8d776f0c85f2f547e3223"
+    },
+    {
+      "path": "Diplomacy/RuntimeSessionScopeDecision.cs",
+      "stage_path": "src/Diplomacy/RuntimeSessionScopeDecision.cs",
+      "sha256": "8745a30cc4c1504b12f0ca10eb5a797a26ce1c9918d6a70d1d964f13aa7f0c23"
+    },
+    {
+      "path": "Diplomacy/SoloSessionPolicy.cs",
+      "stage_path": "src/Diplomacy/SoloSessionPolicy.cs",
+      "sha256": "0bcff42def6733df1b23543dc5774108432ef2130adeddb5633ab409273697e5"
+    },
+    {
+      "path": "Diplomacy/State/DiplomacyState.cs",
+      "stage_path": "src/Diplomacy/State/DiplomacyState.cs",
+      "sha256": "45529f09757cae7ebe7f36423154e8d0166c5deb95214424707cd2282c935cd0"
+    },
+    {
+      "path": "Diplomacy/VerifiedManagedSurface.cs",
+      "stage_path": "src/Diplomacy/VerifiedManagedSurface.cs",
+      "sha256": "60b1882989ba1af7c180b8ae317a4b0bed75d39029007a01679eafa1b8211203"
+    },
+    {
+      "path": "Economy/AiLordEconomicProfiles.cs",
+      "stage_path": "src/Economy/AiLordEconomicProfiles.cs",
+      "sha256": "2f52b49f75546e399c6c312260d05473caf542ca5eda2cd8f47e727efe996c13"
+    },
+    {
+      "path": "Economy/AiProcurementPolicy.cs",
+      "stage_path": "src/Economy/AiProcurementPolicy.cs",
+      "sha256": "79e2d5930a10661569bac30c447d85ba90d85293c895ebb209ad3f819c9bbdeb"
+    },
+    {
+      "path": "Economy/BarterModels.cs",
+      "stage_path": "src/Economy/BarterModels.cs",
+      "sha256": "f070830f36c8ada4eac4fac3810111d8c2efeec5c54f5b404e4bfa246864b345"
+    },
+    {
+      "path": "Economy/DiplomaticTradeNegotiation.cs",
+      "stage_path": "src/Economy/DiplomaticTradeNegotiation.cs",
+      "sha256": "1bc4dd04a8cad4274a71f281346e6db35a183a3ec5beb118cee406f07a46ea20"
+    },
+    {
+      "path": "Economy/ObservedCommodityEconomy.cs",
+      "stage_path": "src/Economy/ObservedCommodityEconomy.cs",
+      "sha256": "e92902d0e40b0abbb46f6092581955b649ce0f00322d036e3c194334bd0b4f57"
+    },
+    {
+      "path": "Economy/OriginalInventoryEvidence.cs",
+      "stage_path": "src/Economy/OriginalInventoryEvidence.cs",
+      "sha256": "43e480bb7caac5b9e7a3ed2ed0618824aca653a873e8fd8921c788ce05bd19a0"
+    },
+    {
+      "path": "Economy/OriginalTradeSettlement.cs",
+      "stage_path": "src/Economy/OriginalTradeSettlement.cs",
+      "sha256": "49ca95421cc4107498431dc6898faccf6855a7eb20dd60878af2e60a6043870e"
+    },
+    {
+      "path": "Economy/RebellionObservation.cs",
+      "stage_path": "src/Economy/RebellionObservation.cs",
+      "sha256": "ec3d3130aa01a34eea22397b6ab24e22e87531b16983cd1fddee4486b74a0ca4"
+    },
+    {
+      "path": "Engine/CanonicalManagedIL.cs",
+      "stage_path": "src/Engine/CanonicalManagedIL.cs",
+      "sha256": "aaeb237e90a4c76376ed706a211b9679ebe9cd74dfa066a3c79ed76c19b32fc4"
+    },
+    {
+      "path": "Engine/DiplomacyNativeInventorySection.cs",
+      "stage_path": "src/Engine/DiplomacyNativeInventorySection.cs",
+      "sha256": "8e7e4f270bbf4d9108768212d667f343c5ad56df7fa9a234deaf03189bf9f3d7"
+    },
+    {
+      "path": "Engine/DiplomacyNativeTruceAdmission.cs",
+      "stage_path": "src/Engine/DiplomacyNativeTruceAdmission.cs",
+      "sha256": "e67f604c6e0a0a12026ca7cc69cd6e5c1467bacf5add5207e710af22cc0340af"
+    },
+    {
+      "path": "Engine/DiplomatieCompatibilityGuard.cs",
+      "stage_path": "src/Engine/DiplomatieCompatibilityGuard.cs",
+      "sha256": "ca35ead0f6ff0e6d3896056c110b2bccd4fa7287ce828a3a2269ac2700b30300"
+    },
+    {
+      "path": "Engine/FourCellPrecommit.cs",
+      "stage_path": "src/Engine/FourCellPrecommit.cs",
+      "sha256": "29928f092715eb991c3238dd17fed4285e82e8aabf9b71e928c1381fc58c4dcd"
+    },
+    {
+      "path": "Engine/NativeIntegrationAuthority.cs",
+      "stage_path": "src/Engine/NativeIntegrationAuthority.cs",
+      "sha256": "3d9162a3db6de9e2011ab8570c86bc8adf604973612ca19338f803f79b256abd"
+    },
+    {
+      "path": "Engine/NativeInventoryContract.cs",
+      "stage_path": "src/Engine/NativeInventoryContract.cs",
+      "sha256": "21c122a221d5d0bcf3e78488e42499d93cf1247cc9fbc437d76c0425ce9f0425"
+    },
+    {
+      "path": "Engine/NativePriceRecheck.cs",
+      "stage_path": "src/Engine/NativePriceRecheck.cs",
+      "sha256": "9e8d3421503ad9246c6d1cccfd1f359483f06689cb9e15d994774bac129dcb16"
+    },
+    {
+      "path": "Engine/OriginalNativeImageReadOnly.cs",
+      "stage_path": "src/Engine/OriginalNativeImageReadOnly.cs",
+      "sha256": "035c3145edd35a56de00c438846d2eedb104422ffed46610f0b825bf913d24ea"
+    },
+    {
+      "path": "Engine/OriginalOneShotTradeAdmission.cs",
+      "stage_path": "src/Engine/OriginalOneShotTradeAdmission.cs",
+      "sha256": "afcd4b3e7a9b8119c357521bf912132f3982f25c4caa770be3fdbec78fe17dcd"
+    },
+    {
+      "path": "Engine/OriginalSingleplayerCapacity.cs",
+      "stage_path": "src/Engine/OriginalSingleplayerCapacity.cs",
+      "sha256": "5f7204a30c599db4e466a33e6920418756d5c1d50ce363f4b0217a87c4512fc4"
+    },
+    {
+      "path": "Engine/OriginalSoloAuthorizationProtocol.cs",
+      "stage_path": "src/Engine/OriginalSoloAuthorizationProtocol.cs",
+      "sha256": "5188d92b9566af50d69ef69e3535858170fc787d431e214751b310031a58c076"
+    },
+    {
+      "path": "Engine/OriginalSoloReleaseAdmission.cs",
+      "stage_path": "src/Engine/OriginalSoloReleaseAdmission.cs",
+      "sha256": "1b9a2fc6967be16240ae2838e8c0754978ea373061128faaeb0f12c877f947e4"
+    },
+    {
+      "path": "Engine/OriginalSoloSaveEvidence.cs",
+      "stage_path": "src/Engine/OriginalSoloSaveEvidence.cs",
+      "sha256": "01837e455cee2332bb24c5c893271bc7fb8ae98a1884ce26aaff0d6bcc95a402"
+    },
+    {
+      "path": "Engine/SerpsRawraCompat.cs",
+      "stage_path": "src/Engine/SerpsRawraCompat.cs",
+      "sha256": "16aa66f84f3a5e4aa6e40c4a08ab29d1f163cd41dcc35f15fe564dd962e005e0"
+    },
+    {
+      "path": "Engine/StrictNativeTradeAuthorities.cs",
+      "stage_path": "src/Engine/StrictNativeTradeAuthorities.cs",
+      "sha256": "83b92c49634a3a05e4435ae32218f35a449a5ef6648a14fc998518a14bbfd254"
+    },
+    {
+      "path": "Host/DiplomatiePersistentHost.cs",
+      "stage_path": "src/Host/DiplomatiePersistentHost.cs",
+      "sha256": "309141e915c7b0ce7c2740e7e8d732e057604d993080f05049cd5c39c150e616"
+    },
+    {
+      "path": "Host/DiplomatiePlugin.cs",
+      "stage_path": "src/Host/DiplomatiePlugin.cs",
+      "sha256": "7e106d6b262c54209eaf5ee06828b1dcc8bf2b0df142dd30b190b9add971798d"
+    },
+    {
+      "path": "Military/AiAllianceMilitaryPlanner.cs",
+      "stage_path": "src/Military/AiAllianceMilitaryPlanner.cs",
+      "sha256": "d0541de23d4ee0c87662304b6fa876efbccc594f69c4ed10b93855e07f09a2c2"
+    },
+    {
+      "path": "Military/HostDirectedAiTribeBridge.cs",
+      "stage_path": "src/Military/HostDirectedAiTribeBridge.cs",
+      "sha256": "f3d320219ca4223349d1a57d58099247e13b61bad81b3f26f21b1b835604a307"
+    },
+    {
+      "path": "Military/HostDirectedAiTribePolicy.cs",
+      "stage_path": "src/Military/HostDirectedAiTribePolicy.cs",
+      "sha256": "77bc959261d15591bf18d628857e6f1993a60ee35ea18c6123cb85037beeba0f"
+    },
+    {
+      "path": "Military/HumanAllyOrderPipeline.cs",
+      "stage_path": "src/Military/HumanAllyOrderPipeline.cs",
+      "sha256": "eb6347177b24c36cd8051491c8dd07e4d7993a99eee1e044a744091f060ac841"
+    },
+    {
+      "path": "Military/HumanAllyOrderReapplication.cs",
+      "stage_path": "src/Military/HumanAllyOrderReapplication.cs",
+      "sha256": "852e5ff98f0e41527b3b3fa49e407d8005f925db63fa9552fae4eae82f8b2852"
+    },
+    {
+      "path": "Military/MilitaryReservePolicy.cs",
+      "stage_path": "src/Military/MilitaryReservePolicy.cs",
+      "sha256": "ec7681d352a5b2eb1a1da2bf3d3f8c5fffdcab8a6c793c01fcac4bb5db975540"
+    },
+    {
+      "path": "Military/ModSupportIntentLifecycle.cs",
+      "stage_path": "src/Military/ModSupportIntentLifecycle.cs",
+      "sha256": "1b0c8ac6526d311e36141296bfcc1792f49e9ee1e3f5d893c87217fb5ed94989"
+    },
+    {
+      "path": "Military/OriginalAiTribeSupportPreparation.cs",
+      "stage_path": "src/Military/OriginalAiTribeSupportPreparation.cs",
+      "sha256": "734f56e195404d97e9439c03441df23d3daf8b2907a3ac507b954af5e3e9c9cd"
+    },
+    {
+      "path": "Military/OriginalAllyAtomicHumanClaim.cs",
+      "stage_path": "src/Military/OriginalAllyAtomicHumanClaim.cs",
+      "sha256": "688eb7ff0b22e9ac9d2768af3792ee06dbbd463182215123c4f1e1cfb6767126"
+    },
+    {
+      "path": "Military/OriginalAllyChoreQueue.cs",
+      "stage_path": "src/Military/OriginalAllyChoreQueue.cs",
+      "sha256": "0e0bf037672d45768294d1472142de634f128ecd0d7798489f620dd34be711fc"
+    },
+    {
+      "path": "Military/OriginalAllyHumanPriorityOwner.cs",
+      "stage_path": "src/Military/OriginalAllyHumanPriorityOwner.cs",
+      "sha256": "edf74f6f1108a1e6fe94292597d5cee4a61a21f8b2d3241c2fb7f11a109d64e3"
+    },
+    {
+      "path": "Military/OriginalAllyRequestReviewPolicy.cs",
+      "stage_path": "src/Military/OriginalAllyRequestReviewPolicy.cs",
+      "sha256": "4a6a6c86fcd5572e5d0e0a75a81bea32f8677c5ba48ca601c4c3aee02ce27e81"
+    },
+    {
+      "path": "Military/OriginalAllySupportRequestBridge.cs",
+      "stage_path": "src/Military/OriginalAllySupportRequestBridge.cs",
+      "sha256": "34b56a805015415c678efe96bb7b7d22f719aed794fbafdcc43dd47e8123266f"
+    },
+    {
+      "path": "Military/OriginalAllySynchronousEvaluatorCapture.cs",
+      "stage_path": "src/Military/OriginalAllySynchronousEvaluatorCapture.cs",
+      "sha256": "82c17eb6006e5340b3d2d51dffb08f9865262b6976eac4441a2223ebc54df408"
+    },
+    {
+      "path": "Military/OriginalHumanAllyOrderBridge.cs",
+      "stage_path": "src/Military/OriginalHumanAllyOrderBridge.cs",
+      "sha256": "1b86e641b5ffe735e93ea1c1350bed394584377859be71ff908bf273f14f519b"
+    },
+    {
+      "path": "Military/OriginalHumanAllyOrderRules.cs",
+      "stage_path": "src/Military/OriginalHumanAllyOrderRules.cs",
+      "sha256": "b72f746701cf756746bb15b2a4b757bc6fa2880fa5b03859b488aa0b5f822e12"
+    },
+    {
+      "path": "Military/OriginalPreWorkerRegistration.cs",
+      "stage_path": "src/Military/OriginalPreWorkerRegistration.cs",
+      "sha256": "e2482231823ce7d78b3f9b3d1960f376bf6b9b17e54f2d26f015f7e35ef57dd2"
+    },
+    {
+      "path": "Military/OriginalSimulationPostTickBoundary.cs",
+      "stage_path": "src/Military/OriginalSimulationPostTickBoundary.cs",
+      "sha256": "ea6281ee898f3e04daf11cb0cc1b47b6ac9ccb18e5eca52c826b0d59811e6293"
+    },
+    {
+      "path": "Military/ReadOnlyNativeAiCapacityEvidence.cs",
+      "stage_path": "src/Military/ReadOnlyNativeAiCapacityEvidence.cs",
+      "sha256": "a0bb8636a40f9e73a1a0b05e8515030529178401c67974abb4e75a0bece2b8a1"
+    },
+    {
+      "path": "Networking/AuthenticatedHostActionInbox.cs",
+      "stage_path": "src/Networking/AuthenticatedHostActionInbox.cs",
+      "sha256": "2bdb6ab57b6b01ca443ff1ac5ff990a5cac038349a6659da136aea6c084a1f73"
+    },
+    {
+      "path": "Networking/AuthenticatedHumanActionActivation.cs",
+      "stage_path": "src/Networking/AuthenticatedHumanActionActivation.cs",
+      "sha256": "c2cd6613729414bda0e373139a2723ee1dc54951d63c908cbe0377add08f1d3f"
+    },
+    {
+      "path": "Networking/AuthenticatedTradeIngressRouter.cs",
+      "stage_path": "src/Networking/AuthenticatedTradeIngressRouter.cs",
+      "sha256": "dc579d9f88537f3f9e7da1018482b5a92b749dc0026ec89c66ddbd0cc8a41136"
+    },
+    {
+      "path": "Networking/AuthenticatedTradeWire.cs",
+      "stage_path": "src/Networking/AuthenticatedTradeWire.cs",
+      "sha256": "650c70ef7c2467ba31168ea4fdc47bcd9628eb72822abb37f2d99aa013380384"
+    },
+    {
+      "path": "Networking/ConsentOnlyChoreAdapter.cs",
+      "stage_path": "src/Networking/ConsentOnlyChoreAdapter.cs",
+      "sha256": "8846e568f4145d26ed7c80c6f77886b4eff8b40bfb7f738477de9762072c51f6"
+    },
+    {
+      "path": "Networking/ConsentPublicationCoordinator.cs",
+      "stage_path": "src/Networking/ConsentPublicationCoordinator.cs",
+      "sha256": "a2b1173d0c958095bd2845d153452cdb011b5cc450de1085cb374d22db92c216"
+    },
+    {
+      "path": "Networking/ConsentWorldDigest.cs",
+      "stage_path": "src/Networking/ConsentWorldDigest.cs",
+      "sha256": "215d641a3312214a1f7b32f2611ae89deaaf2985ada33f2476f4612a43131746"
+    },
+    {
+      "path": "Networking/ControllerEngineBoundary.cs",
+      "stage_path": "src/Networking/ControllerEngineBoundary.cs",
+      "sha256": "e5ffbea73d30f82b43ba26925a33815d9ceb344503d838a1f085d2243b0eed72"
+    },
+    {
+      "path": "Networking/ExistingMpProjectionReceipt.cs",
+      "stage_path": "src/Networking/ExistingMpProjectionReceipt.cs",
+      "sha256": "bacfad21588853a85593d1e82f1fbcd749996425f14a3765d54b73843783e2df"
+    },
+    {
+      "path": "Networking/HostSignedTradeSession.cs",
+      "stage_path": "src/Networking/HostSignedTradeSession.cs",
+      "sha256": "a8cd3b0d1a854be15445add8722f94d5f96f4d6a61721298f06363d947343efc"
+    },
+    {
+      "path": "Networking/HumanTradeActionWire.cs",
+      "stage_path": "src/Networking/HumanTradeActionWire.cs",
+      "sha256": "fa3a511a1740af8ece2d217852587579a143f2265a4d536435d884efe6c77a56"
+    },
+    {
+      "path": "Networking/MpOwnerLifecycleGlue.cs",
+      "stage_path": "src/Networking/MpOwnerLifecycleGlue.cs",
+      "sha256": "de290a66eaa417ee110714e90fbe4dce7f701735632494d2b7022f6a5bd0c6b6"
+    },
+    {
+      "path": "Networking/MpSnapshotDigest.cs",
+      "stage_path": "src/Networking/MpSnapshotDigest.cs",
+      "sha256": "70fa62d66459b43b54576adce298f7025a4a3bc548842e9e8db44cfeb6547944"
+    },
+    {
+      "path": "Networking/OriginalClockAndFrameCache.cs",
+      "stage_path": "src/Networking/OriginalClockAndFrameCache.cs",
+      "sha256": "1f8233a3eae3e2766df2c21ec56ffdd80c6260aadfebe4f1255aa2f5dda34893"
+    },
+    {
+      "path": "Networking/OriginalMpRosterBinding.cs",
+      "stage_path": "src/Networking/OriginalMpRosterBinding.cs",
+      "sha256": "973675af932d9d780a9527332cd706d8fbeb2ea4791553ec0b040b9305ede276"
+    },
+    {
+      "path": "Networking/OriginalPeerPublicationQuorum.cs",
+      "stage_path": "src/Networking/OriginalPeerPublicationQuorum.cs",
+      "sha256": "b9aa88b42b20d089c1a602489181f8b1902ead05fd9ae0b734847247ba987957"
+    },
+    {
+      "path": "Networking/PeerPublicationProtocol.cs",
+      "stage_path": "src/Networking/PeerPublicationProtocol.cs",
+      "sha256": "df959998d01bce288165b1adcd99dbe02d9176e3edfd77ca77c1ee32c85dccec"
+    },
+    {
+      "path": "Networking/SignedChoreEngineBridge.cs",
+      "stage_path": "src/Networking/SignedChoreEngineBridge.cs",
+      "sha256": "198a4feec523fa4cc4065247b09770795ee8384af8c766d2a80d6a015a16592f"
+    },
+    {
+      "path": "Networking/SignedLockstepProtocol.cs",
+      "stage_path": "src/Networking/SignedLockstepProtocol.cs",
+      "sha256": "0e40be9cbef1178d4296404071f0cef289af8f72d2b3a588f48087b97413aef8"
+    },
+    {
+      "path": "Networking/SignedTradeActionBatch.cs",
+      "stage_path": "src/Networking/SignedTradeActionBatch.cs",
+      "sha256": "f935aa5594cedb609bcbd461df1ae52ff401636e369178e3872ec1108a6c3713"
+    },
+    {
+      "path": "Networking/SignedTradeActionReducerBridge.cs",
+      "stage_path": "src/Networking/SignedTradeActionReducerBridge.cs",
+      "sha256": "e42d97d2c1174e77802a305fc35810c98ba146bad4106d9b33839f42bc489e34"
+    },
+    {
+      "path": "Networking/StagedCanonicalMpPublication.cs",
+      "stage_path": "src/Networking/StagedCanonicalMpPublication.cs",
+      "sha256": "ef173d38e6fee3566df3841a9bc8db881a9e7d672b22c074fb88c475ff3e7e0b"
+    },
+    {
+      "path": "Networking/SteamIngress.cs",
+      "stage_path": "src/Networking/SteamIngress.cs",
+      "sha256": "ae2660a706f61015252b731983c4acbe3aa32b2056a626bfdb43894d5eba95f9"
+    },
+    {
+      "path": "Networking/SteamTradeRuntime.cs",
+      "stage_path": "src/Networking/SteamTradeRuntime.cs",
+      "sha256": "2b08655fb0868bca7bf84092d434ad12164363f7dea2618f0234aa3dc93ef65d"
+    },
+    {
+      "path": "Networking/TwoPhaseConsentPublicationOwner.cs",
+      "stage_path": "src/Networking/TwoPhaseConsentPublicationOwner.cs",
+      "sha256": "2292300b6b3df2ac06818b456e9121be61de2bc37e7d587e18f6c23b3cc63af3"
+    },
+    {
+      "path": "Persistence/AtomicSaveCore.cs",
+      "stage_path": "src/Persistence/AtomicSaveCore.cs",
+      "sha256": "0665420c40c9a3eb1f4f4aace31b2a16455696ca9abed48efa29e4b09f28d19c"
+    },
+    {
+      "path": "Persistence/CanonicalTradeStatePersistence.cs",
+      "stage_path": "src/Persistence/CanonicalTradeStatePersistence.cs",
+      "sha256": "235785d811af42ec548a530b7fd193146cea50d3961e9b44920852f1a0ea0d01"
+    },
+    {
+      "path": "Persistence/CompatibilityContracts.cs",
+      "stage_path": "src/Persistence/CompatibilityContracts.cs",
+      "sha256": "8eddc21cdef86db531bc84f9aaf6e4dd6447d6fb4ba660c624ea82fa08d0516d"
+    },
+    {
+      "path": "Persistence/DiplomacyStateCodec.cs",
+      "stage_path": "src/Persistence/DiplomacyStateCodec.cs",
+      "sha256": "4a1cd861f75648188fb254e576d0b036f2439552a2228f53e943f0cfb117ba1d"
+    },
+    {
+      "path": "Persistence/ExistingSaveReceiptGate.cs",
+      "stage_path": "src/Persistence/ExistingSaveReceiptGate.cs",
+      "sha256": "c93afa1efddad59251bc91e818a4c1c5416572ce1127c4e066259e83d3212cfc"
+    },
+    {
+      "path": "Persistence/LegacyDiplomacySaveCodec.cs",
+      "stage_path": "src/Persistence/LegacyDiplomacySaveCodec.cs",
+      "sha256": "0ae7c83049356630d8fa1a8d4df501a42659e5c09420fcc6a196aae22c4c97b8"
+    },
+    {
+      "path": "Persistence/MpColdLoadLifecycle.cs",
+      "stage_path": "src/Persistence/MpColdLoadLifecycle.cs",
+      "sha256": "2c3190b1bd1d2e1d75d3ed4791a46ee06ce931f4cf44b4acbe0903ff739e20e6"
+    },
+    {
+      "path": "Persistence/MpFeatureSaveGlue.cs",
+      "stage_path": "src/Persistence/MpFeatureSaveGlue.cs",
+      "sha256": "0dc683dc1a672fad2615272d39a246958c235c413aac9b14f536b100740614c9"
+    },
+    {
+      "path": "Persistence/OriginalGameSaveBridge.cs",
+      "stage_path": "src/Persistence/OriginalGameSaveBridge.cs",
+      "sha256": "e122be4ca679a4b5f42b9ff2636f9f33924202c0db2029359f9d4ab38aaccea9"
+    },
+    {
+      "path": "Persistence/OriginalMultiplayerConsentStateOwner.cs",
+      "stage_path": "src/Persistence/OriginalMultiplayerConsentStateOwner.cs",
+      "sha256": "dd0a4b99aa7628606a620145bbfa9db72ecfd25f499d98e48e27eb1842a54457"
+    },
+    {
+      "path": "Persistence/OriginalSavedWorldReadiness.cs",
+      "stage_path": "src/Persistence/OriginalSavedWorldReadiness.cs",
+      "sha256": "9575ab9fcac220e8cf9dbe6aaee35f237f3cd89317e3a0bef0786c73bcca8a1a"
+    },
+    {
+      "path": "Persistence/OriginalSoloSaveReadback.cs",
+      "stage_path": "src/Persistence/OriginalSoloSaveReadback.cs",
+      "sha256": "99662974f07524788d0cd9a957d31087b1eb03114d61f159b068f98c7e217f6b"
+    },
+    {
+      "path": "Persistence/TradeSave.cs",
+      "stage_path": "src/Persistence/TradeSave.cs",
+      "sha256": "89b2e418620182b4a1d9e7ab21aed2716b9d420ba9096a991608ec54df0f1809"
+    },
+    {
+      "path": "Persistence/TransferRecovery.cs",
+      "stage_path": "src/Persistence/TransferRecovery.cs",
+      "sha256": "eb4956145de0aa89403680292c41cdcd3620b2fe1f050aa70e669b89d5f05661"
+    },
+    {
+      "path": "Qa/ExistingCanonicalOwnerReadOnly.cs",
+      "stage_path": "src/Qa/ExistingCanonicalOwnerReadOnly.cs",
+      "sha256": "3c38f4b4c1bf6b95f1c85646ae41f6a03bab6d1a1f67a8e694a9fa237e292977"
+    },
+    {
+      "path": "Qa/IsolatedProfileRouting.cs",
+      "stage_path": "src/Qa/IsolatedProfileRouting.cs",
+      "sha256": "6ebf30eaaccafe158cfd7fefd13ba529cc2da65b3b4932ce656682bbccb1bc48"
+    },
+    {
+      "path": "Qa/NativeAidColdLoadProbe.cs",
+      "stage_path": "src/Qa/NativeAidColdLoadProbe.cs",
+      "sha256": "2f69a21abfb5033dd779234c45ed84c008d9e021f29dd983898093b5f76e6311"
+    },
+    {
+      "path": "Qa/NativeAidDurabilityProbe.cs",
+      "stage_path": "src/Qa/NativeAidDurabilityProbe.cs",
+      "sha256": "ee59722e5416d84df94203dccdb3ccdf2723a2bbbbeb6d3acc047c237533b380"
+    },
+    {
+      "path": "Qa/OriginalAiAidWarmScenario.cs",
+      "stage_path": "src/Qa/OriginalAiAidWarmScenario.cs",
+      "sha256": "8f70c3dfbe76d484560e70f52c64eb6abb8f8e7d98949184eaf6313b793f52e7"
+    },
+    {
+      "path": "Qa/OriginalAiOfferBlockerReadOnlyAudit.cs",
+      "stage_path": "src/Qa/OriginalAiOfferBlockerReadOnlyAudit.cs",
+      "sha256": "526890079d365e264086735e9ca68f48eaf7d867f15821d8137819b50331df28"
+    },
+    {
+      "path": "Qa/OriginalBriefingCallbackTrace.cs",
+      "stage_path": "src/Qa/OriginalBriefingCallbackTrace.cs",
+      "sha256": "b7e29e9cbf99e2c6e5a18c8c39f60987eccaf5b69d3f9028b885b72ea2da3e37"
+    },
+    {
+      "path": "Qa/OriginalCpuTribeOrderProbe.cs",
+      "stage_path": "src/Qa/OriginalCpuTribeOrderProbe.cs",
+      "sha256": "a816148db89ec903eedadfcbc441d694775d9abbdca2e76f7cce7edd52b125d6"
+    },
+    {
+      "path": "Qa/OriginalMapPhaseObserver.cs",
+      "stage_path": "src/Qa/OriginalMapPhaseObserver.cs",
+      "sha256": "8a7d8c4600122d4fcd32a336f2b7f979cd5087f3a0eaf102ab717de47dc3dc78"
+    },
+    {
+      "path": "Qa/OriginalMilitaryObservationProbe.cs",
+      "stage_path": "src/Qa/OriginalMilitaryObservationProbe.cs",
+      "sha256": "8e437d952ef4fc99b4ced53b2d54ec6d64bdfcd621629adeff57310ff772141d"
+    },
+    {
+      "path": "Qa/OriginalMilitaryScenarioDriver.cs",
+      "stage_path": "src/Qa/OriginalMilitaryScenarioDriver.cs",
+      "sha256": "b61a022ae0f046ef2ceee75ef74b918b4db92ceef96d0fb632aa8fd0b6efec11"
+    },
+    {
+      "path": "Qa/OriginalModAiLiveDryRun.cs",
+      "stage_path": "src/Qa/OriginalModAiLiveDryRun.cs",
+      "sha256": "e12b1d97528803d7f7a132d53fb5b292152a87925b86848526e96df0e7ced283"
+    },
+    {
+      "path": "Qa/OriginalSoloRuntimeObservation.cs",
+      "stage_path": "src/Qa/OriginalSoloRuntimeObservation.cs",
+      "sha256": "3512b605be6ca578c0d39e54386b040962c96f54e15d426f38b6247d1d9e2a1b"
+    },
+    {
+      "path": "Qa/OriginalSoloSaveOnlyQa.cs",
+      "stage_path": "src/Qa/OriginalSoloSaveOnlyQa.cs",
+      "sha256": "d14bcfd01036d6fb39139322c4269b309e85b0dc01fa778c7caa2fb3bd3a4ba4"
+    },
+    {
+      "path": "Qa/SoloPreflight.cs",
+      "stage_path": "src/Qa/SoloPreflight.cs",
+      "sha256": "a83f8d572fa0526e92dd2c7b85c007b79acd61611ae69ca9590de83b0e1d2064"
+    },
+    {
+      "path": "Testing/DisposableQaDriver.cs",
+      "stage_path": "src/Testing/DisposableQaDriver.cs",
+      "sha256": "d90ea9731f8647369add1a72b356bea8c3a0bfb0ee4bb2e41bc791f80c4c81e1"
+    },
+    {
+      "path": "Testing/HeadlessAtomicColdLoad.cs",
+      "stage_path": "src/Testing/HeadlessAtomicColdLoad.cs",
+      "sha256": "e4ca7f44ef546ed4b4eb90fa793006f1bb43f94b8be1e1a249eb2cecc32f2994"
+    },
+    {
+      "path": "Testing/HeadlessQaDriver.cs",
+      "stage_path": "src/Testing/HeadlessQaDriver.cs",
+      "sha256": "27378302f2f98c71961c8fed3967374b778ccbe5ba65b546784dda15bacc8730"
+    },
+    {
+      "path": "Testing/HeadlessTradeEvidence.cs",
+      "stage_path": "src/Testing/HeadlessTradeEvidence.cs",
+      "sha256": "e20d25cd60ef6961d7877dbab9243b2032f7a619a0b5fd6d7970701414ca113f"
+    },
+    {
+      "path": "Trade/AiConsentWithoutGoodsCapacity.cs",
+      "stage_path": "src/Trade/AiConsentWithoutGoodsCapacity.cs",
+      "sha256": "5257a594d7eb9886f7897d7cb4a812aacec4765cda03981b0aa2695ab11ca86e"
+    },
+    {
+      "path": "Trade/AiOfferScheduling.cs",
+      "stage_path": "src/Trade/AiOfferScheduling.cs",
+      "sha256": "d1c9c1238c618af709dc6a8b7b1fbff7fbc07642160b0e7e069bd4fa58f7e036"
+    },
+    {
+      "path": "Trade/AiTradeIntentMailbox.cs",
+      "stage_path": "src/Trade/AiTradeIntentMailbox.cs",
+      "sha256": "aa210883c83c9b57d6cf7f111c19581ce863ba6588f0be6c5d3af6aa340c9149"
+    },
+    {
+      "path": "Trade/CanonicalAiEconomicScheduler.cs",
+      "stage_path": "src/Trade/CanonicalAiEconomicScheduler.cs",
+      "sha256": "e38c6383b3656de38671b2669ad169f3ae3f7253422cccd457861220d11afa00"
+    },
+    {
+      "path": "Trade/CanonicalAiInitiativeBudget.cs",
+      "stage_path": "src/Trade/CanonicalAiInitiativeBudget.cs",
+      "sha256": "1e2d9de4bedb6a508a6a42e77cb6dc0878ec1b925a09b78e2e21f7142fb37594"
+    },
+    {
+      "path": "Trade/CanonicalOriginalAiEconomy.cs",
+      "stage_path": "src/Trade/CanonicalOriginalAiEconomy.cs",
+      "sha256": "a386d4f598094aaf825c377362cb2fd2554db77b5902220c9d5b2be022ac1f3c"
+    },
+    {
+      "path": "Trade/CanonicalTradeReducerCore.cs",
+      "stage_path": "src/Trade/CanonicalTradeReducerCore.cs",
+      "sha256": "ba5ed49052337da1ea039fd89b0b8c2543f71e1bb1669a2144499f17739ea978"
+    },
+    {
+      "path": "Trade/GameTradeGameplay.cs",
+      "stage_path": "src/Trade/GameTradeGameplay.cs",
+      "sha256": "be5f820af3e6efa33979ab496feb582db3a3c06c96a52093275a32d2b58c66fd"
+    },
+    {
+      "path": "Trade/HumanOfferConsentState.cs",
+      "stage_path": "src/Trade/HumanOfferConsentState.cs",
+      "sha256": "d0859b7fdd18ebbee0fa0a7e95c0694c91475c4eeda11d7fcb1b0f9151ce1287"
+    },
+    {
+      "path": "Trade/HumanOfferTransitionRules.cs",
+      "stage_path": "src/Trade/HumanOfferTransitionRules.cs",
+      "sha256": "6261b6f94bdf80835cc8c743f692e0954a570d556fd6d452b4cc7ae94fdf5ff2"
+    },
+    {
+      "path": "Trade/LiveTradePairPolicy.cs",
+      "stage_path": "src/Trade/LiveTradePairPolicy.cs",
+      "sha256": "c7092871d1c4c0a3cd73b3a7d907f2cd5a5c461cd61b4939435acca1189fdf8c"
+    },
+    {
+      "path": "Trade/LiveTradeSnapshotReader.cs",
+      "stage_path": "src/Trade/LiveTradeSnapshotReader.cs",
+      "sha256": "98cffb44aacdf1d87356d613c3a37ca79f8a7277bb5e54e0dcb109ae2a5caa46"
+    },
+    {
+      "path": "Trade/ModAiHumanOfferOrigin.cs",
+      "stage_path": "src/Trade/ModAiHumanOfferOrigin.cs",
+      "sha256": "1021c045649d1e187088e252ceea34f270b33f0e0076c4548d6517e1359636c4"
+    },
+    {
+      "path": "Trade/TradeConsentFactory.cs",
+      "stage_path": "src/Trade/TradeConsentFactory.cs",
+      "sha256": "331dd4b8d9b18f93269f2dec128b6c0eb670fc59fc5d3e5fc7b2b68c90179ecd"
+    },
+    {
+      "path": "Trade/TradeConsentReducer.cs",
+      "stage_path": "src/Trade/TradeConsentReducer.cs",
+      "sha256": "6c59cfbd62ce8b0aa35de3fc555ca548583f63374d3d31d6bf05964134cf001d"
+    },
+    {
+      "path": "Trade/TradePairEligibilityPolicy.cs",
+      "stage_path": "src/Trade/TradePairEligibilityPolicy.cs",
+      "sha256": "065e78626a0f4119b77a8e39ddd9fb8e4831dd532e4964df5656c1c043781fb8"
+    },
+    {
+      "path": "Trade/TradeRelationshipRules.cs",
+      "stage_path": "src/Trade/TradeRelationshipRules.cs",
+      "sha256": "9f80ff98517a96a6fd800c0e620407745f69c54d86c1af63fe345dc24006f37f"
+    },
+    {
+      "path": "Trade/TradeWorldFrameAdapterContract.cs",
+      "stage_path": "src/Trade/TradeWorldFrameAdapterContract.cs",
+      "sha256": "181daa510266991a780585c0117bdef16c7bc1f5ba6296260c31aae5b5436941"
+    },
+    {
+      "path": "Trade/VerifiedNativeTradeSettlement.cs",
+      "stage_path": "src/Trade/VerifiedNativeTradeSettlement.cs",
+      "sha256": "ccf3b264cf09e4460a7ad219df37f1f067c20bd62a9fd5b222c91e009cf08d85"
+    },
+    {
+      "path": "Ui/ActualVisibleTradePanelWitness.cs",
+      "stage_path": "src/Ui/ActualVisibleTradePanelWitness.cs",
+      "sha256": "349153be78c61bc633029d623b975bc5c20cd7a4e7979542929048994756bdf4"
+    },
+    {
+      "path": "Ui/AllianceOverviewPresenter.cs",
+      "stage_path": "src/Ui/AllianceOverviewPresenter.cs",
+      "sha256": "38bd6e6a3e45d2f1dd7cef5b47661529bf67b79eb7fbd7f503c84dcd773dbf2d"
+    },
+    {
+      "path": "Ui/DiplomacyChronicle.cs",
+      "stage_path": "src/Ui/DiplomacyChronicle.cs",
+      "sha256": "2d324d30bb9da7831709e5c014ebce49da272834023005c674bb48acb69384e2"
+    },
+    {
+      "path": "Ui/DiplomacyDeferredUi.cs",
+      "stage_path": "src/Ui/DiplomacyDeferredUi.cs",
+      "sha256": "b22e3d497124f3c207c2bba5a4a0535ca8c2c22915cf3c9ce13c3db8caf2d46d"
+    },
+    {
+      "path": "Ui/LiveTradeQuotePresenter.cs",
+      "stage_path": "src/Ui/LiveTradeQuotePresenter.cs",
+      "sha256": "2fd1ca8f0d31dac8b79fd790b489f530ea2e8a59769202f77610828b569133a3"
+    },
+    {
+      "path": "Ui/LordChat.cs",
+      "stage_path": "src/Ui/LordChat.cs",
+      "sha256": "619f48324c7b57e81e45ac7c180a20036da9c325df424bad24a03589b410911c"
+    },
+    {
+      "path": "Ui/MultiplayerTradeConsentPresenter.cs",
+      "stage_path": "src/Ui/MultiplayerTradeConsentPresenter.cs",
+      "sha256": "6f0eb0baefed027154f573691a6212db3a45b680ca49721ff47bd6d2ac90dcb6"
+    },
+    {
+      "path": "Ui/OriginalHudConsentReadOnly.cs",
+      "stage_path": "src/Ui/OriginalHudConsentReadOnly.cs",
+      "sha256": "d20d64bac715a1dbd4f9c3e470f94bca7525324aae4e9ad0d22bebd9d94077b6"
+    },
+    {
+      "path": "Ui/ReadOnlyTradeReadiness.cs",
+      "stage_path": "src/Ui/ReadOnlyTradeReadiness.cs",
+      "sha256": "df887d6ee1fde866ae6ee89ca0f2b0b8efb44df69498640fe87d825733cac351"
+    },
+    {
+      "path": "Ui/SingleplayerTradeConsentPresenter.cs",
+      "stage_path": "src/Ui/SingleplayerTradeConsentPresenter.cs",
+      "sha256": "0ba046eddcc083bb3b662d6d5b5d0524ea050603be388ce8f70f3a2e00418edb"
+    },
+    {
+      "path": "Ui/TradeDialogIntegration.cs",
+      "stage_path": "src/Ui/TradeDialogIntegration.cs",
+      "sha256": "83d94e15ec2236fba57e1ea48196866e3d025eddaef9eccaeb3f44cb649277e3"
+    },
+    {
+      "path": "Ui/TradeOutcomePresenter.cs",
+      "stage_path": "src/Ui/TradeOutcomePresenter.cs",
+      "sha256": "f65a80e5c828e558469e6217ada1f5e272452357d5c4e3ce49d234494ebf9696"
+    },
+    {
+      "path": "Ui/TradePartnerDraftController.cs",
+      "stage_path": "src/Ui/TradePartnerDraftController.cs",
+      "sha256": "78ce95241f074a3c38a3b8ab2e6abc856896938e5175ca4b240049d2beba9a53"
+    },
+    {
+      "path": "Ui/TradePreviewLayout.cs",
+      "stage_path": "src/Ui/TradePreviewLayout.cs",
+      "sha256": "128986c8e76b94feaec7f51d5ccf2638e3bd1330c39b97f6c57339d8c7ba10c3"
+    },
+    {
+      "path": "World/MultiHumanConsentReducer.cs",
+      "stage_path": "src/World/MultiHumanConsentReducer.cs",
+      "sha256": "094312edf0436ec7e4d3ad844da80a3ff1f5f8597c855d6910f53e75247119af"
+    },
+    {
+      "path": "World/OriginalConsentRuntimeAdapter.cs",
+      "stage_path": "src/World/OriginalConsentRuntimeAdapter.cs",
+      "sha256": "665a48d2a188043011c85e9b5468e6709ea99dce860387d191f22071508370d2"
+    },
+    {
+      "path": "World/OriginalConsentWorldFrame.cs",
+      "stage_path": "src/World/OriginalConsentWorldFrame.cs",
+      "sha256": "f807af4e226af335e523f3d991f409eeb04bc8587568ea9bc5d23fb3c9e49a46"
+    },
+    {
+      "path": "World/PeerWorldFrameAgreement.cs",
+      "stage_path": "src/World/PeerWorldFrameAgreement.cs",
+      "sha256": "b87585e1c66dabf1b2340e5d327977b46b7fbd4ec4c0082618761d2a38216cdc"
+    },
+    {
+      "path": "World/VerifiedHumanRoster.cs",
+      "stage_path": "src/World/VerifiedHumanRoster.cs",
+      "sha256": "611778b7cfc48927d703740f811c6df4f8c81e705aad1336004688d5a9f1c558"
+    }
+  ],
+  "schema": "diplomacy-source-index",
+  "profiles": {
+    "release": [
+      "DIPLOMACY_RELEASE"
+    ],
+    "qa": [
+      "DIPLOMACY_PRIVATE_TESTS",
+      "HOST_DIRECTED_AI_TRIBE_CANARY",
+      "ORIGINAL_CPU_TRIBE_ORDER_PROBE"
+    ]
+  }
+}

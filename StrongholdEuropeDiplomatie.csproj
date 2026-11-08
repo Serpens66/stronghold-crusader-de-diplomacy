@@ -1,0 +1,79 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Portable, deterministic diplomacy build. All source and dependency roots
+       are supplied by build.py; this project does not discover installations. -->
+  <PropertyGroup>
+    <TargetFramework>net481</TargetFramework>
+    <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
+    <LangVersion>12.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <AssemblyName>$(PluginAssemblyName)</AssemblyName>
+    <RootNamespace>$(PluginRootNamespace)</RootNamespace>
+    <Version>$(ProductVersion)</Version>
+    <AssemblyVersion>$(ProductAssemblyVersion)</AssemblyVersion>
+    <FileVersion>$(ProductFileVersion)</FileVersion>
+    <DefineConstants>$(BuildCompileDefines)</DefineConstants>
+    <PathMap>$(CanonicalSourceTree)=/_/src,$(MSBuildProjectDirectory)=/_/project</PathMap>
+    <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <Target Name="CheckPinnedBuildContract" BeforeTargets="PrepareForBuild">
+    <Error Condition="'$(CanonicalSourceTree)' == '' Or !Exists('$(CanonicalSourceTree)')"
+           Text="Pass CanonicalSourceTree through the portable build entry point." />
+    <Error Condition="'$(PluginAssemblyName)' == '' Or '$(PluginRootNamespace)' == ''"
+           Text="A reviewed external assembly identity and namespace are required." />
+    <Error Condition="'$(ProductVersion)' == '' Or '$(ProductAssemblyVersion)' == '' Or '$(ProductFileVersion)' == ''"
+           Text="Pass reviewed product, assembly, and file versions." />
+    <Error Condition="'$(BuildCompileDefines)' == ''"
+           Text="Explicit feature defines are required; no build may silently grant release authority." />
+    <Error Condition="'$(FrameworkPathOverride)' == '' Or !Exists('$(FrameworkPathOverride)')"
+           Text="Provide offline framework reference assemblies." />
+    <Error Condition="!Exists('$(BepInExReference)')" Text="Missing BepInEx reference." />
+    <Error Condition="!Exists('$(HarmonyReference)')" Text="Missing Harmony reference." />
+    <Error Condition="!Exists('$(SHCDESEReference)')" Text="Missing game extender reference." />
+    <Error Condition="!Exists('$(SystemMemoryReference)')" Text="Missing System.Memory reference." />
+    <Error Condition="!Exists('$(R3Reference)')" Text="Missing R3 reference." />
+    <Error Condition="!Exists('$(AssemblyCSharpReference)')" Text="Missing game managed reference." />
+    <Error Condition="!Exists('$(NoesisReference)')" Text="Missing Noesis reference." />
+    <Error Condition="!Exists('$(UnityEngineReference)')" Text="Missing UnityEngine reference." />
+    <Error Condition="!Exists('$(UnityEngineCoreModuleReference)')" Text="Missing UnityEngine.CoreModule reference." />
+    <Error Condition="!Exists('$(UnityEngineAssetBundleModuleReference)')" Text="Missing UnityEngine.AssetBundleModule reference." />
+    <Error Condition="!Exists('$(UnityEngineAudioModuleReference)')" Text="Missing UnityEngine.AudioModule reference." />
+    <Error Condition="!Exists('$(UnityEngineImageConversionModuleReference)')" Text="Missing UnityEngine.ImageConversionModule reference." />
+    <Error Condition="!Exists('$(SteamworksReference)')" Text="Missing Steamworks reference." />
+    <Error Condition="!Exists('$(APISharedReference)')" Text="Missing APIShared reference." />
+    <Error Condition="!Exists('$(NetStandardReference)')" Text="Missing netstandard reference." />
+  </Target>
+
+  <Import Project="$(SelectedCompileItemsFile)" />
+  <ItemGroup>
+    <Reference Include="BepInEx"><HintPath>$(BepInExReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(HarmonyReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="SHCDESE"><HintPath>$(SHCDESEReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="System.Memory"><HintPath>$(SystemMemoryReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="R3"><HintPath>$(R3Reference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>$(AssemblyCSharpReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="Noesis.NoesisGUI"><HintPath>$(NoesisReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(UnityEngineReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(UnityEngineCoreModuleReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AssetBundleModule"><HintPath>$(UnityEngineAssetBundleModuleReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AudioModule"><HintPath>$(UnityEngineAudioModuleReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.ImageConversionModule"><HintPath>$(UnityEngineImageConversionModuleReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="Steamworks"><HintPath>$(SteamworksReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="APIShared"><HintPath>$(APISharedReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="netstandard"><HintPath>$(NetStandardReference)</HintPath><Private>false</Private></Reference>
+    <Reference Include="System.Security"><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>
