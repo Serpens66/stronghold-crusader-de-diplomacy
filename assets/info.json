@@ -1,0 +1,25 @@
+{
+  "GUID": "strongholdeuropede.diplomatie.v2.private",
+  "Author": "Diplomatie",
+  "Name": "Stronghold Crusader Diplomatie",
+  "Description": "Diplomatie, Warenhandel und Fürstenchat im lokalen Gefecht.",
+  "Version": "2.3.11",
+  "Website": "",
+  "Manifest": 1,
+  "NetworkMode": 1,
+  "Dependencies": [
+    {
+      "GUID": "000shcdese",
+      "MinimumVersion": "2.14.3"
+    },
+    {
+      "GUID": "APIShared_Serp",
+      "MinimumVersion": "0.25.0"
+    },
+    {
+      "GUID": "BugfixesAndQoL_Serp",
+      "MinimumVersion": "1.0.192"
+    }
+  ],
+  "MinimumScriptExtenderVersion": "2.14.3"
+}
