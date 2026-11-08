@@ -1,0 +1,20 @@
+{
+  "schema": "diplomacy-readonly-dependency-lock",
+  "sha256": {
+    "BepInExReference": "8255b28902886085c578b9e427d3073c97002db85176d2090cdeda90ef14ce70",
+    "HarmonyReference": "1a21cc03424fc82c3dd1346905d16494536b9595ae4162228d99fb7c285c1031",
+    "SHCDESEReference": "5cb1c33be5463086505a17f5c48aaa357d733cfff7240e101c821f0e3c668498",
+    "SystemMemoryReference": "d5e8e4866f9cfa66f7765660f84b210198893e55335487afe5ebda342c0e913d",
+    "R3Reference": "8d77d5e9b30f6bdc2aa60055a5950ea75d259c9d1c9667a04a7d598e1da9d609",
+    "AssemblyCSharpReference": "bc8b6a395f01d48557db413600c8dd8d1fdfd3abdf97bfbbb68a3c56b04fd789",
+    "NoesisReference": "98476d3ca84ae0f2dcfbaddcc64b01a1f65474bd44402673fd6856d1b5347648",
+    "UnityEngineReference": "6abba25864b843149b594c7831dbf5eb7afe87c55d5112a4739ca4da09b91280",
+    "UnityEngineCoreModuleReference": "e468e19789d608b41e2c7fe4f367c7082fece7d1883f568e75870f6c5384cc86",
+    "UnityEngineAssetBundleModuleReference": "0ba5cb05eb305368c96124efc9104e65a17cc8872822147c0252644d4efecb83",
+    "UnityEngineAudioModuleReference": "9cf8c391390e5178c75cdfb186da3dc9f8679a31491f69739aaa6f65bbd0724d",
+    "UnityEngineImageConversionModuleReference": "1fe9119a493265849938f734e384a7a63cf6b8c75ed20c43c742feb601eba8ed",
+    "SteamworksReference": "71123ab0b6b8e8489a39ce16bfa3d7498b40904e0b43d7cb5369fe40b6552596",
+    "APISharedReference": "6a21ca725fd92bf1565e2bbc9ff95e890808cbbe642bfc14867e7b1ea480c957",
+    "NetStandardReference": "fada723de68eca78dc6e4279ebf1c886810dcd7b4a970290cb7ac068ef04b766"
+  }
+}
