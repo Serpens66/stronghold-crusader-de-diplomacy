@@ -1,0 +1,26 @@
+<Patch xmlns:n="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+  <Operation Type="Add"
+      XPath="//n:Grid[@Width='800' and @Height='{Binding MPChat_Size}']">
+    <Content>
+      <Grid Name="LordChatComposer" Visibility="Collapsed"
+            Width="792" Height="37" Margin="4,0,4,0"
+            HorizontalAlignment="Left" VerticalAlignment="Bottom"
+            Background="#DD211A12" Panel.ZIndex="9">
+        <TextBlock Name="LordChatCaption" Width="143" Margin="7,8,0,0"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            FontSize="13" Foreground="#FFE8D09A"
+            Text="Lord chat" IsHitTestVisible="False" />
+        <TextBox Name="LordChatInput" Width="498" Height="31"
+            Margin="150,3,140,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+            MaxLength="180" FontSize="14" Foreground="#FFEFF3C6"
+            Background="#FF30251B" BorderBrush="#FFC8A775"
+            BorderThickness="1" />
+        <Button Name="LordChatSend" Width="130" Height="31"
+            Margin="656,3,3,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+            Content="Send" FontSize="13" Foreground="#FFEFF3C6"
+            Background="#FF634422" BorderBrush="#FFD9B56D"
+            BorderThickness="1" />
+      </Grid>
+    </Content>
+  </Operation>
+</Patch>
