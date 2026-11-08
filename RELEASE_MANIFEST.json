@@ -1,0 +1,17 @@
+{
+  "schema": "diplomacy-public-preview-v1",
+  "version": "2.3.11-preview.1",
+  "source_commit": "f085016434f021220ecc820914feea9cf56aef4c",
+  "dll_sha256": "4f0bacef7f634c5986b005c3f83296445b35a52f86f90572c56c993d70d5b4a2",
+  "module_id": "8709ce84-96f3-4a47-8172-3afcd523fa4d",
+  "source_index_sha256": "377f21483de32884191a1727c66d0e72890aae0609a2edfd6a3125ff89cd6fe7",
+  "source_count": 196,
+  "build_profile": "qa",
+  "singleplayer_only": true,
+  "autonomous_ai_aid_enabled": true,
+  "autonomous_ai_military_enabled": false,
+  "native_mp_release": false,
+  "native_normal_release": false,
+  "game_or_dependency_binaries_included": false,
+  "personal_profiles_or_saves_included": false
+}
