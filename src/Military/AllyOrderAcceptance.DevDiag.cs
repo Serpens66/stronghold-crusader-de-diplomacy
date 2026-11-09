@@ -57,6 +57,11 @@ namespace StrongholdEuropeDE.Runtime
                 steps.Add(new AutomationStep("native-order", TimeSpan.FromSeconds(50),
                     CheckDiagnosticAllyOrder, missionBound: true));
             }
+            else if (lines[1] == "diplomacy-target-rules")
+            {
+                steps.Add(new AutomationStep("shared-target-rules", TimeSpan.FromSeconds(40),
+                    CheckDiagnosticTargetExclusions, missionBound: true));
+            }
             else if (lines[1] == "diplomacy-save")
             {
                 steps.Add(new AutomationStep("write-managed-diplomacy-save", TimeSpan.FromSeconds(30),
@@ -186,6 +191,28 @@ namespace StrongholdEuropeDE.Runtime
             string path = Path.Combine(ConfigSettings.GetSavesPath(), "SerpAcceptance-" + runId.ToString("N") + ".sav");
             if (File.Exists(path))
                 throw new InvalidOperationException("Acceptance save already exists.");
+            int saveBegins = 0, saveCompletions = 0;
+            bool matchingSave = false;
+            if (!APIShared.Savegames.ManagedSaveEvents.TryRegister(CompatibilityContracts.PluginId,
+                    "diag-original-save",
+                    call =>
+                    {
+                        if (!string.Equals(call.Path, path, StringComparison.Ordinal) || call.MapSave)
+                            return null;
+                        saveBegins++;
+                        return call;
+                    },
+                    (completion, state) =>
+                    {
+                        if (state == null)
+                            return;
+                        saveCompletions++;
+                        matchingSave = ReferenceEquals(completion.Call, state) &&
+                            _missionSessionId == mission.SessionId &&
+                            string.Equals(completion.Path, path, StringComparison.Ordinal) &&
+                            !completion.WasSkipped && completion.Result == true && completion.Exception == null;
+                    }, out string saveObserverFailure))
+                throw new InvalidOperationException(saveObserverFailure);
             var location = CameraControls2D.instance.getScreenXYForSaveCentring(
                 (int)((float)(UnityEngine.Screen.width / 64) / PerfectPixelWithZoom.instance.getZoom()),
                 (int)((float)(UnityEngine.Screen.height / 16) / PerfectPixelWithZoom.instance.getZoom()));
@@ -194,6 +221,9 @@ namespace StrongholdEuropeDE.Runtime
             if (!EngineInterface.SaveSaveGame(path, location.x, location.y, centreX, centreY, false, false, false) ||
                 !File.Exists(path) || new FileInfo(path).Length == 0)
                 throw new InvalidOperationException("Original acceptance save did not complete.");
+            if (saveBegins != 1 || saveCompletions != 1 || !matchingSave)
+                throw new InvalidOperationException("The shared save observer did not pair the actual save.");
+            DevDiag.Log(() => "diplomacy shared managed save observed once");
             DevDiag.Log(() => "diplomacy managed save recorded id=" + SaveProbeId);
         }
 
@@ -288,6 +318,17 @@ namespace StrongholdEuropeDE.Runtime
         {
             var previous = run.CurrentMission;
             string previousMap = _mapFingerprint;
+            lock (_gate)
+            {
+                int player = _roster.First(id => id != _localPlayer);
+                if (_sharedAllyOrderActive || _allyInFlight[player] != null)
+                    throw new InvalidOperationException("Cannot stage an inert reply for mission retirement.");
+                Volatile.Write(ref _allyInFlight[player], new HumanAllyOrderAttempt
+                {
+                    Generation = _sessionGeneration,
+                    Epoch = _mapEpoch
+                });
+            }
             var view = MainViewModel.Instance;
             view.HUDIngameMenu.restartSkirmishMapInfo = null;
             view.HUDmain.InGameOptions(null, null);
@@ -311,6 +352,7 @@ namespace StrongholdEuropeDE.Runtime
                     _mapFingerprint == previousMap || _pendingSavePayload != null || _pendingLegacySavePayload != null ||
                     _pendingTeamTransition != null || HasPendingGoodsCommand ||
                     _allyOrders.Any(order => order != null) ||
+                    _allyInFlight.Any(order => order != null) || _allyReplies.Any(order => order != null) ||
                     (_requestHistory?.Records.Any(record => record.Origin == DiplomaticRequestOrigin.ModAuthored &&
                         record.GoodId == (int)eGoods.STORED_GOLD && record.Quantity == SaveProbeAmount) ?? false))
                     throw new InvalidOperationException("Map replacement retained prior diplomacy state.");

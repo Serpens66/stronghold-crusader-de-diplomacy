@@ -29,7 +29,7 @@ namespace StrongholdEuropeDE.Diplomatie
     [BepInDependency(PrivateProfileBootstrap.PluginId)]
     [BepInDependency("APIShared_Serp", "0.25.0")]
 #else
-    [BepInDependency("APIShared_Serp", "0.41.0")]
+    [BepInDependency("APIShared_Serp", GeneratedPublicBuildDependencies.ApiSharedMinimum)]
 #endif
 #if DIPLOMACY_PRIVATE_TESTS
     [BepInDependency("BugfixesAndQoL_Serp", "1.0.192")]

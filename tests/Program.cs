@@ -74,4 +74,19 @@ Require(!OriginalHumanAllyOrderRules.ValidateRoute(order, invalidRoute, out _), 
 int claim = 0;
 Require(OriginalHumanAllyOrderRules.TryClaimDiagnosticDispatch(ref claim), "first replay owns the ticket");
 Require(!OriginalHumanAllyOrderRules.TryClaimDiagnosticDispatch(ref claim), "duplicate replay cannot dispatch");
+object currentReply = new object();
+object expectedReply = currentReply;
+Require(!OriginalHumanAllyOrderRules.TryClaimReplyTimeout(ref currentReply, expectedReply, 8, 8, null) &&
+    ReferenceEquals(currentReply, expectedReply), "missing mission clock preserves the pending reply");
+Require(!OriginalHumanAllyOrderRules.TryClaimReplyTimeout(ref currentReply, expectedReply, 8, 8, 255) &&
+    ReferenceEquals(currentReply, expectedReply), "255 elapsed ticks do not expire the reply");
+Require(!OriginalHumanAllyOrderRules.TryClaimReplyTimeout(ref currentReply, new object(), 8, 8, 256) &&
+    ReferenceEquals(currentReply, expectedReply), "a replaced attempt cannot claim another reply");
+Require(OriginalHumanAllyOrderRules.TryClaimReplyTimeout(ref currentReply, expectedReply, 8, 8, 256) &&
+    currentReply == null, "256 elapsed ticks atomically claim and clear the reply");
+Require(!OriginalHumanAllyOrderRules.TryClaimReplyTimeout(ref currentReply, expectedReply, 8, 8, 256),
+    "a second expiry cannot publish the same reply");
+currentReply = expectedReply;
+Require(!OriginalHumanAllyOrderRules.TryClaimReplyTimeout(ref currentReply, expectedReply, 8, 9, null) &&
+    currentReply == null, "a replacement session retires the old reply without publishing a timeout");
 Console.WriteLine("Diplomacy mission ownership, save proof and ally command contracts passed.");

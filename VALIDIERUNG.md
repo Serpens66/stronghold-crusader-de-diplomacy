@@ -1,4 +1,21 @@
-# Prüfnachweise zum Hauptzweig
+# Prüfnachweise
+
+## Regulärer Entwicklungsstand mit APIShared 0.43.0
+
+Der reguläre Build wurde mit APIShared 0.43.0 geprüft. In einem Einzelspieler-
+Gefechtsstand wurde eine aktive Waffenruhe über den normalen Save-Pfad
+gespeichert und in einem frischen Prozess wiederhergestellt. Mit
+BugfixesAndQoL, SerpsMods und Fixes löste ein Rechtsklick auf eine von
+Vanilla erkannte Zieleinheit genau einen Vertragsbruch aus. Der native
+Originalaufruf und der Angriffsbefehl der ausgewählten Einheit bestätigten
+dieselbe Zieleinheit.
+
+BugfixesAndQoL wurde zusätzlich mit natürlichen Raubtiergruppen geprüft.
+Während der globalen Friedenszeit blieb der beobachtete Nahkampfschaden aus.
+Nach Ablauf bestätigte der native Schadenspfad einen Treffer mit
+Gesundheitsverlust. Beide Ergebnisse wurden mit und ohne Fixes beobachtet.
+
+## Historische Prüfnachweise zur Vorabversion
 
 ## Build
 

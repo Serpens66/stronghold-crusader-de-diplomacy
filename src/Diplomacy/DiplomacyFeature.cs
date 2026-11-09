@@ -947,7 +947,9 @@ namespace StrongholdEuropeDE.Runtime
                     Log("gameaction", "status=shared_callback_fail_closed_or_late_mutation" +
                         "|count=" + brokerFaults.ToString(CultureInfo.InvariantCulture) +
                         "|native_ack=false");
+#if DIPLOMACY_PRIVATE_TESTS
                 ReportNativeTruceAdmission();
+#endif
                 if (_deferredPortraitRestore && CanPresentDiplomacyUi)
                 {
                     _deferredPortraitRestore = false;
@@ -2185,7 +2187,7 @@ namespace StrongholdEuropeDE.Runtime
                 _deferredDisableStage = null;
                 _deferredDisableException = null;
                 _saveFailurePending = null;
-                Volatile.Write(ref _combatProtectionSnapshot, CombatProtectionSnapshot.Empty);
+                SetCombatProtectionSnapshot(CombatProtectionSnapshot.Empty);
                 Log("activation", "status=mission_retired|reason=" + notification.EndReason);
             }
         }

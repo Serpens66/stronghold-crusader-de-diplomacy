@@ -76,7 +76,7 @@ namespace StrongholdEuropeDE.Runtime
             PublishVassalRequestSnapshot();
             if (!CombatGuardOperational())
             {
-                Volatile.Write(ref _combatProtectionSnapshot, CombatProtectionSnapshot.Empty);
+                SetCombatProtectionSnapshot(CombatProtectionSnapshot.Empty);
                 return;
             }
 
@@ -124,7 +124,15 @@ namespace StrongholdEuropeDE.Runtime
                 Interlocked.Increment(ref _combatSnapshotFaults);
             }
 
-            Volatile.Write(ref _combatProtectionSnapshot, new CombatProtectionSnapshot(_sessionGeneration, members, rows));
+            SetCombatProtectionSnapshot(new CombatProtectionSnapshot(_sessionGeneration, members, rows));
+        }
+
+        private void SetCombatProtectionSnapshot(CombatProtectionSnapshot snapshot)
+        {
+            Volatile.Write(ref _combatProtectionSnapshot, snapshot);
+#if !DIPLOMACY_PRIVATE_TESTS
+            PublishSharedTargetExclusions(snapshot);
+#endif
         }
 
         // Busy publication is managed-only. Keep known protection, but also add
@@ -192,7 +200,11 @@ namespace StrongholdEuropeDE.Runtime
             StartSteamTransport(); // authenticated Steam receive only, never goods
             InstallGameSaveBridge();
             InstallSignedEngineBridge();
+#if DIPLOMACY_PRIVATE_TESTS
             ApplyNativeTruceAdmission();
+#else
+            RegisterSharedTargetExclusions();
+#endif
             ApplyAllyOrders();
             ApplyHumanOrders();
             ApplyCastleBoundaryEvents();
@@ -236,7 +248,12 @@ namespace StrongholdEuropeDE.Runtime
             UninstallSignedEngineBridge();
             StopSteamTransport();
             UninstallGameSaveBridge();
+#if DIPLOMACY_PRIVATE_TESTS
             RollbackNativeTruceAdmission();
+#else
+            lock (_gate)
+                SetCombatProtectionSnapshot(CombatProtectionSnapshot.Empty);
+#endif
             RollbackAllyOrders();
             RollbackHumanOrders();
             RollbackCastleBoundaryEvents();
@@ -2300,7 +2317,7 @@ namespace StrongholdEuropeDE.Runtime
             if (preserveRollbackGuard)
                 PublishCombatProtectionSnapshot();
             else
-                Volatile.Write(ref _combatProtectionSnapshot, CombatProtectionSnapshot.Empty);
+                SetCombatProtectionSnapshot(CombatProtectionSnapshot.Empty);
         }
 
         // No native/API dependencies: exercised as the actual production type
@@ -2329,6 +2346,18 @@ namespace StrongholdEuropeDE.Runtime
             {
                 return first != second && Contains(first) && Contains(second) && (_rows[first] & (1 << second)) != 0;
             }
+
+#if !DIPLOMACY_PRIVATE_TESTS
+            internal bool HasSamePairs(CombatProtectionSnapshot other)
+            {
+                if (other == null || _members != other._members)
+                    return false;
+                for (int player = 1; player < _rows.Length; player++)
+                    if (_rows[player] != other._rows[player])
+                        return false;
+                return true;
+            }
+#endif
 
             internal bool HasProtectionFor(int player)
             {

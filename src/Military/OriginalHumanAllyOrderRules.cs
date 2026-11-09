@@ -149,6 +149,20 @@ namespace StrongholdEuropeDE.Runtime
 
     internal static class OriginalHumanAllyOrderRules
     {
+#if !DIPLOMACY_PRIVATE_TESTS
+        // Retire a foreign session without publishing an expiry. The slot identity
+        // also prevents a competing decision from being replaced by a timeout.
+        internal static bool TryClaimReplyTimeout<T>(ref T slot, T expected,
+            long dispatchedSession, long currentSession, int? elapsed) where T : class
+        {
+            bool current = dispatchedSession > 0 && dispatchedSession == currentSession;
+            if (current && !(elapsed >= 256))
+                return false;
+            return ReferenceEquals(System.Threading.Interlocked.CompareExchange(ref slot, null, expected), expected) &&
+                current;
+        }
+#endif
+
         internal const int OriginalAllyOrdersCommand = 1061;
         internal const long LastUsableOriginalTick = (long)int.MaxValue - 4096;
         internal static bool Slot(int p)

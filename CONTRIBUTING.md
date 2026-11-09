@@ -55,13 +55,20 @@ APIShared-SDK und einer expliziten Abhängigkeitssperre ausführen. Die Sperre
 enthält die verifizierten Prüfsummen aller Referenzen einschließlich der
 ausgewählten APIShared-DLL. `references/release.json` dokumentiert den
 ursprünglichen Stand und enthält den Hash des früheren APIShared-SDKs.
-Für eine isolierte Prüfung die reguläre DLL mit `assets/release/info.json`
-als `info.json` und den bestehenden `assets/Patches` separat installieren.
+Für eine isolierte Prüfung die reguläre DLL mit dem erzeugten `info.json`
+und den bestehenden `assets/Patches` separat installieren.
 Die APIShared-Abhängigkeit wird über das eigene Paket bereitgestellt.
 
-Der reguläre Build nutzt die öffentlichen Broker für HUD, Spielende und
-Missionswechsel. Die native Weiterleitung über den GameAction-Validator bleibt
-bis zu ihrem Audit und einer erfolgreichen regulären Spielprüfung gesperrt.
+Der reguläre Build benötigt APIShared 0.43.0 und nutzt dessen öffentliche
+Broker für HUD, Spielende und Missionswechsel. Diplomatie veröffentlicht
+geschützte Spielerpaare als Regeln für die gemeinsame native Zielwahl.
+Die Rückmeldefrist für Verbündetenbefehle folgt der Simulationsuhr der
+aktuellen Mission. Die native Weiterleitung über den GameAction-Validator
+bleibt bis zu ihrem Audit und einer erfolgreichen regulären Spielprüfung gesperrt.
+
+Der reguläre Build erzeugt das Paketmanifest im Ausgabeordner aus
+`assets/release/info.json`. Verwende beim Paketieren das erzeugte Manifest,
+damit Plugin und Paket dieselbe APIShared-Anforderung angeben.
 
 ## Änderungen prüfen
 

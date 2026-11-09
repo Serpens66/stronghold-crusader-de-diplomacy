@@ -1,3 +1,18 @@
+# Änderungen im regulären Entwicklungsstand
+
+- Der reguläre Build benötigt APIShared 0.43.0. Diplomatie und eine kompatible
+  BugfixesAndQoL-Version können denselben nativen Zielwahlfilter nutzen.
+- Ein Angriffsklick auf einen Vertragspartner kann die Waffenruhe beenden
+  und den passenden Originalbefehl auslösen. Aktive Waffenruhen werden beim
+  Laden eines Spielstands wiederhergestellt.
+- Das Rückmeldefenster für Verbündetenbefehle im regulären Build verwendet
+  die Simulationsuhr der aktuellen Mission.
+- Der Build erzeugt die Versionsanforderung im Plugin und das passende
+  Manifest aus derselben Abhängigkeitsangabe.
+
+Die gezielten Einzelspielerprüfungen dieses Stands stehen in
+[VALIDIERUNG.md](VALIDIERUNG.md#regulärer-entwicklungsstand-mit-apishared-0430).
+
 # Diplomatie 2.3.11-preview.1
 
 Einzelspieler-Vorabversion für Stronghold Crusader Definitive Edition, Stand

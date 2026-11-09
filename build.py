@@ -214,6 +214,24 @@ def check_identity(args):
     return values
 
 
+def public_build_manifest(diagnostic: bool):
+    manifest_path = PROJECT_DIR / "assets/release/info.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8-sig"))
+    matches = [dependency for dependency in manifest["Dependencies"]
+               if dependency.get("GUID") == "APIShared_Serp"]
+    if len(matches) != 1:
+        raise BuildContractError("The public manifest must declare one APIShared dependency.")
+    dependency = matches[0]
+    minimum = dependency.get("MinimumVersion")
+    if not isinstance(minimum, str) or not re.fullmatch(r"[0-9]+(?:\.[0-9]+){2,3}", minimum):
+        raise BuildContractError("The public APIShared minimum must be a numeric version.")
+    if diagnostic and tuple(map(int, minimum.split("."))) < (0, 42, 0):
+        # The managed-save diagnostic uses the API introduced in 0.42.0.
+        minimum = "0.42.0"
+        dependency["MinimumVersion"] = minimum
+    return manifest, minimum
+
+
 def build(args, selected, defines, index_sha, source_root):
     options = check_identity(args)
     defaults = PROJECT_DIR / "dependencies"
@@ -260,6 +278,18 @@ def build(args, selected, defines, index_sha, source_root):
             "Include": "$(CanonicalSourceTree)/" + logical.removeprefix("src/"),
             "Link": logical,
         })
+    manifest = None
+    if args.profile == "release":
+        manifest, minimum = public_build_manifest(diagnostic_source is not None)
+        generated = obj / "GeneratedPublicBuildDependencies.cs"
+        generated.write_text(
+            "namespace StrongholdEuropeDE.Runtime {\n"
+            "    internal static class GeneratedPublicBuildDependencies {\n"
+            f"        internal const string ApiSharedMinimum = \"{minimum}\";\n"
+            "    }\n"
+            "}\n", encoding="utf-8", newline="\r\n"
+        )
+        ET.SubElement(item_group, "Compile", {"Include": str(generated)})
     ET.ElementTree(items_project).write(selected_items, encoding="utf-8", xml_declaration=True)
     if diagnostic_source is not None:
         diagnostic_copy = profile_out / "DevDiag.cs"
@@ -328,6 +358,11 @@ def build(args, selected, defines, index_sha, source_root):
     after_pins = all(digest(source) == expected for source, _, expected in selected)
     if not after_pins:
         raise BuildContractError("Inputs changed while building; output is not acceptable.")
+    if manifest is not None and result.returncode == 0:
+        (binary / "info.json").write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8", newline="\r\n"
+        )
     receipt = {
         "schema": "portable-offline-build-receipt",
         "profile": "devdiag" if diagnostic_source else args.profile,

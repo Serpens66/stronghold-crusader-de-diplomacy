@@ -29,6 +29,10 @@ namespace StrongholdEuropeDE.Runtime
             internal bool ObservedActive;
             internal int EndedDay = -1;
             internal long DispatchedTick, ReplySequence;
+#if !DIPLOMACY_PRIVATE_TESTS
+            internal long ReplySession;
+            internal int ReplyStartTick;
+#endif
             internal bool NativeDecision, PolicyDecision, DecisionUnbound, LocalRefusal, DispatchFailed;
             internal bool ObservedWithdrawal, TrackingExpired;
             // Strict per-wrapper managed GameAction Post evidence only. Neither
@@ -51,7 +55,9 @@ namespace StrongholdEuropeDE.Runtime
 
         // A timeout never invents an answer. Evaluator events lack a packet id;
         // known overlapping tuples remain unbound rather than guessing an ACK.
+#if DIPLOMACY_PRIVATE_TESTS
         private const long AllyReplyWaitTicks = 256;
+#endif
         private readonly HumanAllyOrderAttempt[] _allyOrders = new HumanAllyOrderAttempt[9];
         private readonly HumanAllyOrderAttempt[] _allyInFlight = new HumanAllyOrderAttempt[9];
         private readonly HumanAllyOrderAttempt[] _allyReplies = new HumanAllyOrderAttempt[9];
@@ -928,6 +934,14 @@ namespace StrongholdEuropeDE.Runtime
                 int day = Math.Max(0, _lastProcessedDay);
                 if (!ObserveMilitaryClock(tick, day))
                     return;
+#if !DIPLOMACY_PRIVATE_TESTS
+                var mission = _missionLifecycle.Current;
+                long replySession = mission?.SessionId ?? 0;
+                // The existing engine lease keeps the native map tick stable throughout this pump.
+                int? replyTick = IsCurrentPublicSoloMission(mission) &&
+                    APIShared.Simulation.SimulationClock.TryGetCurrentTick(mission, out int mapTick)
+                    ? mapTick : (int?)null;
+#endif
                 for (int player = 1; player <= 8; player++)
                 {
 #if DIPLOMACY_PRIVATE_TESTS && HOST_DIRECTED_AI_TRIBE_CANARY
@@ -961,7 +975,11 @@ namespace StrongholdEuropeDE.Runtime
 
                     // Consume a real decision before examining its deadline.
                     ConsumeAllyOrderReply(player);
+#if DIPLOMACY_PRIVATE_TESTS
                     ExpireAllyOrderReply(player, tick);
+#else
+                    ExpireAllyOrderReply(player, replySession, replyTick);
+#endif
                     HumanAllyOrderAttempt order = Volatile.Read(ref _allyOrders[player]);
                     if (order != null)
                     {
@@ -990,15 +1008,24 @@ namespace StrongholdEuropeDE.Runtime
                             try
                             {
                                 bool valid;
-                                // An unavailable observation keeps the click queued.
+                                // Missing role or clock evidence leaves the click in its original slot.
                                 if (TryValidateHumanPair(order, out valid) &&
+#if !DIPLOMACY_PRIVATE_TESTS
+                                    (!valid || replyTick.HasValue) &&
+#endif
                                     (!valid || TryBindManualAllyOrderHistory(order)))
                                 {
                                     if (ReferenceEquals(Interlocked.CompareExchange(
                                             ref _allyOrders[player], null, order), order))
                                     {
                                         if (valid)
+                                        {
+#if !DIPLOMACY_PRIVATE_TESTS
+                                            order.ReplySession = replySession;
+                                            order.ReplyStartTick = replyTick.Value;
+#endif
                                             DispatchAllyOrder(order, true);
+                                        }
                                         else
                                             RefuseAllyOrderLocally(order);
                                     }
@@ -1046,6 +1073,7 @@ namespace StrongholdEuropeDE.Runtime
             }
         }
 
+#if DIPLOMACY_PRIVATE_TESTS
         private void ExpireAllyOrderReply(int player, long tick)
         {
             HumanAllyOrderAttempt inflight = Volatile.Read(ref _allyInFlight[player]);
@@ -1061,6 +1089,31 @@ namespace StrongholdEuropeDE.Runtime
                     PublishAllyOrderReply(inflight);
             }
         }
+#else
+        private void ExpireAllyOrderReply(int player, long session, int? tick)
+        {
+            ref HumanAllyOrderAttempt slot = ref _allyInFlight[player];
+            HumanAllyOrderAttempt inflight = Volatile.Read(ref slot);
+            if (inflight == null)
+                return;
+            if (!IsLatestHumanOrder(inflight))
+            {
+                Interlocked.CompareExchange(ref slot, null, inflight);
+                return;
+            }
+
+            int? elapsed = tick.HasValue && inflight.ReplySession == session &&
+                APIShared.Simulation.SimulationClock.TryGetElapsedTicks(inflight.ReplyStartTick, tick.Value, out int distance)
+                ? distance : (int?)null;
+            if (!OriginalHumanAllyOrderRules.TryClaimReplyTimeout(ref slot, inflight,
+                    inflight.ReplySession, session, elapsed))
+                return;
+
+            MarkReplyAmbiguous(inflight);
+            if (Volatile.Read(ref _allyReplies[player]) == null)
+                PublishAllyOrderReply(inflight);
+        }
+#endif
 
         private static HumanAllyOrderAttempt CopyAllyOrder(HumanAllyOrderAttempt source)
         {
