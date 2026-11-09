@@ -23,6 +23,11 @@ namespace StrongholdEuropeDE.Runtime
             }
         }
 
+        internal bool MatchesOperands(int originalOpcode, int originalConsulted, int originalTarget,
+            int finalOpcode, int finalConsulted, int finalTarget) =>
+            originalOpcode == Opcode && originalConsulted == Consulted && originalTarget == Target &&
+            finalOpcode == Opcode && finalConsulted == Consulted && finalTarget == Target;
+
         internal static bool TryCreate(int requester, int consulted, int opcode, int target, out HumanAllyMilitaryRequest request, out string reason)
         {
             request = null;
@@ -150,6 +155,14 @@ namespace StrongholdEuropeDE.Runtime
         {
             return p >= 1 && p <= 8;
         }
+
+        internal static bool HasPositiveCommonTeam(int requesterTeam, int consultedTeam) =>
+            requesterTeam > 0 && requesterTeam == consultedTeam;
+
+#if SERP_DEVDIAG
+        internal static bool TryClaimDiagnosticDispatch(ref int claim) =>
+            System.Threading.Interlocked.Exchange(ref claim, 1) == 0;
+#endif
 
         internal static bool ValidTick(long tick)
         {

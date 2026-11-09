@@ -33,9 +33,9 @@ py -3 -B tools/local_game.py prepare --help
 py -3 -B build.py --help
 ```
 
-`prepare` verlangt ausdrücklich die Vorlage der Spielkopie, die Entwicklungs-
-und öffentliche APIShared-Fassung, das SDK und die Framework-Referenzen. Die
-vorhandene Spielinstallation wird dabei nur gelesen. Nach Einrichtung der
+`prepare` verlangt ausdrücklich die Vorlage der Spielkopie, die gepinnte
+APIShared-Entwicklungsfassung, das SDK und die Framework-Referenzen. Die
+vorhandene Spielinstallation wird dabei nur gelesen. Der frühere Parameter --public-api entfällt beim QA-Treiber. Das öffentliche SDK wird direkt an build.py übergeben. Nach Einrichtung der
 getrennten Kopie erfolgt der Build mit:
 
 ```powershell
@@ -48,6 +48,20 @@ py -3 -B tools/local_game.py check
 `source-index.json` legt die ausgewählten C#-Dateien und deren Prüfsummen fest.
 Nach Änderungen wird der Index vor dem Build erneuert. `build.py` baut mit
 expliziten Abhängigkeiten und installiert oder startet selbst kein Spiel.
+
+Der lokale Spieltreiber baut und installiert die gepinnte QA-Variante. Für den
+regulären Build `build.py --profile release --build` mit dem öffentlichen
+APIShared-SDK und einer expliziten Abhängigkeitssperre ausführen. Die Sperre
+enthält die verifizierten Prüfsummen aller Referenzen einschließlich der
+ausgewählten APIShared-DLL. `references/release.json` dokumentiert den
+ursprünglichen Stand und enthält den Hash des früheren APIShared-SDKs.
+Für eine isolierte Prüfung die reguläre DLL mit `assets/release/info.json`
+als `info.json` und den bestehenden `assets/Patches` separat installieren.
+Die APIShared-Abhängigkeit wird über das eigene Paket bereitgestellt.
+
+Der reguläre Build nutzt die öffentlichen Broker für HUD, Spielende und
+Missionswechsel. Die native Weiterleitung über den GameAction-Validator bleibt
+bis zu ihrem Audit und einer erfolgreichen regulären Spielprüfung gesperrt.
 
 ## Änderungen prüfen
 

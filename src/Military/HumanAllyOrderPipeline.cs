@@ -34,6 +34,9 @@ namespace StrongholdEuropeDE.Runtime
             // Strict per-wrapper managed GameAction Post evidence only. Neither
             // callback nor a return value is a native military acceptance ACK.
             // Reset for every attempt, including later safe reapplication.
+#if SERP_DEVDIAG
+            internal int DiagnosticDispatchClaim;
+#endif
             internal bool SharedManagedPostObserved, SharedManagedWasSkipped;
             // Set only by the actual original HUD CancelOrders click for this
             // lord. It suppresses future Mod reissues but says NOTHING about
@@ -64,17 +67,11 @@ namespace StrongholdEuropeDE.Runtime
         // APIShared owns the ONE managed GameAction detour for this process.
         // Its registration cannot be uninstalled. Feature rollback only makes
         // our static callback dormant, and a later feature activation reuses it.
-#if DIPLOMACY_PRIVATE_TESTS
-        // Retained for source-level research only; official 0.16.3 ABI
-        // has no final cancellable veto, so no process-owned registration.
         private static readonly object SharedGameActionRegistrationGate = new object();
         private const string SharedGameActionRegistrationId = "diplomacy-original-goods-and-human-orders-v1";
-#endif
-        // In the official API build, this remains statically false and is
-        // also inspected by private QA. It never registers the unsafe old
-        // final-validator broker and cannot authorize native forwarding.
         private static bool _sharedGameActionRegistered = false;
-        private bool _sharedGameActionActive;
+        private bool _sharedAllyOrderActive;
+        private bool _sharedGoodsRequestActive;
         private long _sharedGameActionCallbackFaults;
 
         // A foreign peer with equal maximum callback order can still veto
@@ -195,52 +192,31 @@ namespace StrongholdEuropeDE.Runtime
             }
         }
 
-#if DIPLOMACY_PRIVATE_TESTS
         private bool PrepareAllyOrders(out string failure)
         {
             _allyGameActionTarget = typeof(EngineInterface).GetMethod("GameAction", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(Enums.GameActionCommand), typeof(int), typeof(int), typeof(int) }, null);
-            // Never trust a BepInEx version alone: the official APIShared
-            // Official 0.20.0 develop lacks this unpublished last-boundary contract; only the exact private extended API binary has it.
-            // Missing final method must fail before any managed hook ownership.
-            var finalMethod = typeof(GameActionEvents).GetMethod(
-                "TryRegisterWithFinalValidation",
-                BindingFlags.Public | BindingFlags.Static);
-            failure = _allyGameActionTarget != null &&
-                _allyGameActionTarget.ReturnType == typeof(int) &&
-                finalMethod != null && finalMethod.ReturnType == typeof(bool)
-                ? null : "final GameAction validation API missing; stop without a second hook";
+            failure = _allyGameActionTarget != null && _allyGameActionTarget.ReturnType == typeof(int)
+                ? null : "original managed GameAction ABI unavailable";
             return failure == null;
         }
-
-#else
-        // OFFICIAL v0.16.3 exposes ordered Pre/Post and Accepted, NOT the
-        // private final cancellable validation. Accepted cannot veto.
-        // No weaker replacement for GameAction ownership is allowed.
-        // The original Vanilla managed action is never modified here.
-        private bool PrepareAllyOrders(out string failure)
-        {
-            _allyGameActionTarget = typeof(EngineInterface).GetMethod(
-                "GameAction", BindingFlags.Public | BindingFlags.Static, null,
-                new[] { typeof(Enums.GameActionCommand), typeof(int),
-                        typeof(int), typeof(int) }, null);
-            failure = _allyGameActionTarget != null &&
-                _allyGameActionTarget.ReturnType == typeof(int) &&
-                typeof(GameActionEvents).GetMethod("TryRegister",
-                    BindingFlags.Public | BindingFlags.Static) != null ?
-                null : "public APIShared managed GameAction ABI unavailable";
-            return failure == null;
-        }
-#endif
 
         // APIShared's permanent final-validator registration must be logically
         // dormant outside this owner's current verified feature activation.
         private static bool IsSharedGameActionProtectionActive()
         {
             DiplomacyFeature owner = Volatile.Read(ref _activeOwner);
-            return owner != null &&
-                Volatile.Read(ref owner._sharedGameActionActive);
+#if DIPLOMACY_PRIVATE_TESTS
+            return owner != null && (Volatile.Read(ref owner._sharedAllyOrderActive) ||
+                Volatile.Read(ref owner._sharedGoodsRequestActive));
+#else
+            // A replay already on this thread must still be vetoable when its
+            // owner or session was retired between claiming and dispatch.
+            return _dispatchingAllyOrder != null ||
+                (owner != null && Volatile.Read(ref owner._sharedGoodsRequestActive));
+#endif
         }
 
+#if DIPLOMACY_PRIVATE_TESTS
         // Unrelated GameAction commands (e.g. recruitment and ordinary combat)
         // keep APIShared's documented nested-original behavior unchanged.
         private static bool IsProtectedSharedGameActionNested(
@@ -249,8 +225,8 @@ namespace StrongholdEuropeDE.Runtime
             return command == Enums.GameActionCommand.Ally_RequestGoods ||
                    command == Enums.GameActionCommand.Ally_Orders;
         }
+#endif
 
-#if DIPLOMACY_PRIVATE_TESTS
         private void ApplyAllyOrders()
         {
             lock (SharedGameActionRegistrationGate)
@@ -267,39 +243,34 @@ namespace StrongholdEuropeDE.Runtime
                             OnSharedGameActionPre, OnSharedGameActionPost,
                             OnSharedGameActionFinalValidation, out reason, int.MaxValue,
                             accepted: null,
+#if DIPLOMACY_PRIVATE_TESTS
                             strictNestedKinds: IsProtectedSharedGameActionNested,
+#else
+                            strictNestedKinds: new[] { Enums.GameActionCommand.Ally_Orders },
+#endif
                             isActive: IsSharedGameActionProtectionActive))
                         throw new InvalidOperationException(
                             "APIShared shared GameAction owner unavailable: " + reason);
                     Volatile.Write(ref _sharedGameActionRegistered, true);
                 }
             }
-            Volatile.Write(ref _sharedGameActionActive, true);
+#if DIPLOMACY_PRIVATE_TESTS
+            Volatile.Write(ref _sharedAllyOrderActive, true);
+            Volatile.Write(ref _sharedGoodsRequestActive, true);
             Log("gameaction", "status=apishared_shared_owner_active|legacy_parallel_harmony_hook=false");
+#else
+            // The public broker is installed, but native forwarding needs its
+            // own audit and live acceptance in the regular game profile.
+            Log("gameaction", "status=public_validator_registered|native_ally_forwarding=pending_acceptance");
+#endif
         }
 
-#else
-        private void ApplyAllyOrders()
-        {
-            // Public API cannot provide the strict last cancellable veto.
-            // Disable this Mod's native ally orders/original goods forwarding.
-            // The Vanilla GameAction method remains entirely unhooked by us.
-            if (Volatile.Read(ref _sharedGameActionRegistered))
-                throw new InvalidOperationException(
-                    "Unexpected old private GameAction broker registered");
-            Volatile.Write(ref _sharedGameActionActive, false);
-            Log("gameaction",
-                "status=public_APIShared_0163_last_veto_unavailable" +
-                "|mod_ally_orders_and_original_goods_forwarding_disabled=true" +
-                "|original_vanilla_commands_not_intercepted=true" +
-                "|native_goods_authorized=false|steam_mp_authorized=false");
-        }
-#endif
         private void RollbackAllyOrders()
         {
             // APIShared registrations are process-lived: never remove/re-hook
             // its detour from our feature teardown, including an error rollback.
-            Volatile.Write(ref _sharedGameActionActive, false);
+            Volatile.Write(ref _sharedAllyOrderActive, false);
+            Volatile.Write(ref _sharedGoodsRequestActive, false);
             ClearAllyOrders();
         }
 
@@ -339,12 +310,17 @@ namespace StrongholdEuropeDE.Runtime
         {
             // A previous APIShared veto already decided the managed command.
             // No history row, native call or human-order witness human-order capture may follow.
-            if (call == null || call.SkipOriginalFunction)
+            if (call == null)
                 return;
             DiplomacyFeature owner = Volatile.Read(ref _activeOwner);
-            if (owner == null || !Volatile.Read(ref owner._sharedGameActionActive) ||
-                (call.Command != Enums.GameActionCommand.Ally_RequestGoods &&
-                 call.Command != Enums.GameActionCommand.Ally_Orders))
+            bool order = call.Command == Enums.GameActionCommand.Ally_Orders;
+            if (order && _dispatchingAllyOrder != null && owner == null)
+            {
+                call.SkipOriginalFunction = true;
+                return;
+            }
+            if (owner == null || (!order && (call.Command != Enums.GameActionCommand.Ally_RequestGoods ||
+                    !Volatile.Read(ref owner._sharedGoodsRequestActive))))
                 return;
             try
             {
@@ -357,7 +333,8 @@ namespace StrongholdEuropeDE.Runtime
                     // Post stamp; never infer an Original enqueue merely from
                     // GameAction's zero return. No second hook/native command.
                     call.State = new SharedHumanReplayAttempt(owner, replay);
-                    if (!Volatile.Read(ref owner._mapActive) ||
+                    if (!Volatile.Read(ref owner._sharedAllyOrderActive) ||
+                        !Volatile.Read(ref owner._mapActive) ||
                         Volatile.Read(ref owner._mapDisabled) ||
                         Volatile.Read(ref owner._mapBootstrapPending) ||
                         replay.Generation != owner._sessionGeneration ||
@@ -371,6 +348,19 @@ namespace StrongholdEuropeDE.Runtime
                     return;
                 }
 
+                if (call.SkipOriginalFunction)
+                    return;
+                if (order)
+                {
+#if DIPLOMACY_PRIVATE_TESTS
+                    if (!Volatile.Read(ref owner._sharedAllyOrderActive))
+                        return;
+#else
+                    // Only the DevDiag acceptance driver queues a public
+                    // replay. An ordinary Vanilla ally order passes through.
+                    return;
+#endif
+                }
                 int vanillaResult = 0;
                 bool forward = AllyGameActionPrefix(call.Command,
                     call.StructureId, call.ActionState, call.Value2, ref vanillaResult);
@@ -427,8 +417,7 @@ namespace StrongholdEuropeDE.Runtime
             }
         }
 
-#if DIPLOMACY_PRIVATE_TESTS
-        // This callback is called by a locally extended APIShared broker AFTER
+        // The APIShared broker calls this AFTER
         // EVERY ordered Pre participant, including registrations with an equal
         // int.MaxValue order. The snapshot is frozen; false prevents original
         // execution and makes the existing Post report WasSkipped.
@@ -453,7 +442,7 @@ namespace StrongholdEuropeDE.Runtime
                 HumanAllyOrderAttempt order = replay.Order;
                 return replayOwner != null && order != null &&
                     ReferenceEquals(replayOwner, currentOwner) &&
-                    Volatile.Read(ref replayOwner._sharedGameActionActive) &&
+                    Volatile.Read(ref replayOwner._sharedAllyOrderActive) &&
                     Volatile.Read(ref replayOwner._mapActive) &&
                     !Volatile.Read(ref replayOwner._mapDisabled) &&
                     !Volatile.Read(ref replayOwner._mapBootstrapPending) &&
@@ -469,10 +458,17 @@ namespace StrongholdEuropeDE.Runtime
                     !Volatile.Read(ref order.HumanSource.HumanCancelRequested) &&
                     order.Consulted == replay.Consulted &&
                     order.Target == replay.Target &&
+#if DIPLOMACY_PRIVATE_TESTS
                     finalCall.OriginalStructureId == replay.Opcode &&
                     finalCall.StructureId == replay.Opcode &&
                     finalCall.ActionState == replay.Consulted &&
                     finalCall.Value2 == replay.Target;
+#else
+                    order.NativeRequest != null && order.NativeRequest.MatchesOperands(
+                        finalCall.OriginalStructureId, finalCall.OriginalActionState, finalCall.OriginalValue2,
+                        finalCall.StructureId, finalCall.ActionState, finalCall.Value2) &&
+                    replayOwner.IsCurrentPublicAllyReplay(order);
+#endif
             }
             if (finalCall.Command != Enums.GameActionCommand.Ally_RequestGoods)
                 return true;
@@ -489,13 +485,13 @@ namespace StrongholdEuropeDE.Runtime
                 // In an active map a missing exact goods ticket never becomes
                 // a source identity, even with matching player/quantity.
                 return liveOwner == null ||
-                    !Volatile.Read(ref liveOwner._sharedGameActionActive) ||
+                    !Volatile.Read(ref liveOwner._sharedGoodsRequestActive) ||
                     !Volatile.Read(ref liveOwner._mapActive) ||
                     Volatile.Read(ref liveOwner._mapDisabled);
             }
             DiplomacyFeature owner = attempted.Owner;
             if (owner == null || !ReferenceEquals(owner, liveOwner) ||
-                !Volatile.Read(ref owner._sharedGameActionActive) ||
+                !Volatile.Read(ref owner._sharedGoodsRequestActive) ||
                 !Volatile.Read(ref owner._mapActive) ||
                 Volatile.Read(ref owner._mapDisabled) ||
                 Volatile.Read(ref owner._mapBootstrapPending))
@@ -522,12 +518,15 @@ namespace StrongholdEuropeDE.Runtime
                 // earlier foreign Pre must not turn a different original
                 // request into a matching authorized HUD ticket.
                 finalCall.OriginalStructureId == attempted.Requested &&
+#if !DIPLOMACY_PRIVATE_TESTS
+                finalCall.OriginalActionState == attempted.Good &&
+                finalCall.OriginalValue2 == attempted.Amount &&
+#endif
                 finalCall.StructureId == attempted.Requested &&
                 finalCall.ActionState == attempted.Good &&
                 finalCall.Value2 == attempted.Amount;
         }
 
-#endif
         private static void OnSharedGameActionPost(GameActionPostEventArgs call)
         {
             if (call == null)
@@ -566,7 +565,7 @@ namespace StrongholdEuropeDE.Runtime
                 request.OriginalProducerAllowed = false;
                 request.OriginalProducerRejected = true;
             }
-            if (!Volatile.Read(ref owner._sharedGameActionActive) ||
+            if (!Volatile.Read(ref owner._sharedGoodsRequestActive) ||
                 !ReferenceEquals(Volatile.Read(ref _activeOwner), owner))
                 return;
             try
@@ -916,6 +915,10 @@ namespace StrongholdEuropeDE.Runtime
         {
             if (!_mapActive || _mapDisabled || _mapBootstrapPending)
                 return;
+#if !DIPLOMACY_PRIVATE_TESTS
+            if (!Volatile.Read(ref _sharedAllyOrderActive))
+                return;
+#endif
             IDisposable lease;
             if (!TryEnterNativeInventorySection(out lease))
                 return;
@@ -1116,6 +1119,16 @@ namespace StrongholdEuropeDE.Runtime
         {
             if (!IsLatestHumanOrder(order))
                 return;
+#if !DIPLOMACY_PRIVATE_TESTS
+            // Acceptance measures one user request. Maintenance must never
+            // submit a second native command for that diagnostic ticket.
+            if (!firstDispatch || !Volatile.Read(ref _sharedAllyOrderActive))
+                return;
+#if SERP_DEVDIAG
+            if (!OriginalHumanAllyOrderRules.TryClaimDiagnosticDispatch(ref order.DiagnosticDispatchClaim))
+                return;
+#endif
+#endif
             int player = order.Consulted;
             order.DispatchedDay = Math.Max(0, _lastProcessedDay);
             order.DispatchedTick = ReadSimulationTick();
@@ -1172,6 +1185,16 @@ namespace StrongholdEuropeDE.Runtime
                 _dispatchingAllyOrder = null;
             }
         }
+
+#if !DIPLOMACY_PRIVATE_TESTS
+        private bool IsCurrentPublicAllyReplay(HumanAllyOrderAttempt order)
+        {
+            var mission = _missionLifecycle.Current;
+            return IsCurrentPublicSoloMission(mission) &&
+                _missionPlayState.Current?.SessionId == mission.SessionId &&
+                OriginalHumanAllyOrderBridge.CanDispatchUnderOriginalMonitor(order.NativeRequest);
+        }
+#endif
 
         private static bool MilitaryBlockIsTransient(string reason)
         {

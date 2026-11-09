@@ -231,7 +231,17 @@ def build(args, selected, defines, index_sha, source_root):
     forbidden = [source_root.resolve(), sdk.parent, *[root.resolve() for root in dep_roots]]
     if output == PROJECT_DIR or any(under(output, root) or under(root, output) for root in forbidden):
         raise BuildContractError("Output must not overlap source, game, loader, SDK, extender or project root.")
-    profile_out = output / args.profile
+    diagnostic_source = resolve_path(args.devdiag_source, PROJECT_DIR)
+    diagnostic_hash = None
+    if diagnostic_source is not None:
+        if args.profile != "release" or diagnostic_source.name != "DevDiag.cs":
+            raise BuildContractError("The diagnostic build requires the public profile and Shared DevDiag.cs.")
+        require_file(diagnostic_source, "Shared DevDiag source")
+        if under(output, diagnostic_source.parent) or under(diagnostic_source.parent, output):
+            raise BuildContractError("Diagnostic source and output must be disjoint.")
+        diagnostic_hash = digest(diagnostic_source)
+        defines = [*defines, "SERP_DEVDIAG"]
+    profile_out = output / ("devdiag" if diagnostic_source else args.profile)
     source_pin = hashlib.sha256(
         (";".join(str(relative).replace("\\", "/") + ":" + sha
                   for _, relative, sha in selected) + ":" + index_sha).encode("utf-8")
@@ -251,6 +261,11 @@ def build(args, selected, defines, index_sha, source_root):
             "Link": logical,
         })
     ET.ElementTree(items_project).write(selected_items, encoding="utf-8", xml_declaration=True)
+    if diagnostic_source is not None:
+        diagnostic_copy = profile_out / "DevDiag.cs"
+        shutil.copyfile(diagnostic_source, diagnostic_copy)
+        if digest(diagnostic_copy) != diagnostic_hash:
+            raise BuildContractError("Shared diagnostic source changed while copying.")
     offline_config = profile_out / "NuGet.Config"
     offline_config.write_text("<configuration><packageSources><clear /></packageSources></configuration>\n", encoding="utf-8")
     properties = dict(options)
@@ -273,6 +288,8 @@ def build(args, selected, defines, index_sha, source_root):
         "ImportDirectoryBuildProps": "false",
         "ImportDirectoryBuildTargets": "false",
     })
+    if diagnostic_source is not None:
+        properties["DevDiagSource"] = diagnostic_copy
     command = [
         str(sdk), "build", "--no-restore", "--nologo",
         "--configuration", "Release", "--verbosity", "minimal",
@@ -313,7 +330,7 @@ def build(args, selected, defines, index_sha, source_root):
         raise BuildContractError("Inputs changed while building; output is not acceptable.")
     receipt = {
         "schema": "portable-offline-build-receipt",
-        "profile": args.profile,
+        "profile": "devdiag" if diagnostic_source else args.profile,
         "source_count": len(selected),
         "source_index_sha256": index_sha,
         "source_selection_sha256": source_pin,
@@ -326,6 +343,8 @@ def build(args, selected, defines, index_sha, source_root):
         "native_normal_release": False,
         "native_mp_release": False,
     }
+    if diagnostic_source is not None:
+        receipt["diagnostic_source_sha256"] = diagnostic_hash
     (profile_out / "build-receipt.json").write_text(
         json.dumps(receipt, indent=2) + "\n", encoding="utf-8"
     )
@@ -351,8 +370,13 @@ def main(argv=None):
     p.add_argument("--assembly-version")
     p.add_argument("--file-version")
     p.add_argument("--profile", choices=("release", "qa"), default="release")
+    p.add_argument("--devdiag-source", help=argparse.SUPPRESS)
     p.add_argument("--build", action="store_true", help="Compile offline (never executes game)")
-    args = p.parse_args(argv)
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    devdiag = bool(arguments and arguments[0].casefold() == "/devdiag")
+    args = p.parse_args(arguments[1:] if devdiag else arguments)
+    if bool(args.devdiag_source) != devdiag or (devdiag and not args.build):
+        p.error("Use build.bat /devdiag --devdiag-source <Shared DevDiag.cs> to build diagnostics.")
     try:
         source_root = resolve_path(args.source_root or os.getenv("EUROPE_SOURCE_DIR"),
                                    PROJECT_DIR) or PROJECT_DIR / "src"

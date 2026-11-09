@@ -1,3 +1,6 @@
+#if !DIPLOMACY_PRIVATE_TESTS
+using APIShared.Presentation;
+#endif
 using System;
 using System.Threading;
 using System.Collections.Generic;
@@ -45,8 +48,12 @@ namespace StrongholdEuropeDE.Runtime
         private IDisposable _diplomacyAiDefendSubscription;
         private IDisposable _diplomacyReceivedGoodsSubscription;
         private IDisposable _diplomacyTribeMoveSubscription;
+#if DIPLOMACY_PRIVATE_TESTS
         private MethodInfo _gameOverTarget;
         private bool _gameOverPatchApplied;
+#else
+        private static bool _sharedGameOverRegistered;
+#endif
         private DiplomacyPendingTeamTransition _pendingTeamTransition;
         private long _pendingTransitionGeneration;
         private string _pendingTransitionFingerprint;
@@ -149,10 +156,17 @@ namespace StrongholdEuropeDE.Runtime
 
         private bool PrepareCombatSafety(out string failure)
         {
+#if DIPLOMACY_PRIVATE_TESTS
             Type scenarios = typeof(GameData).GetNestedType("Scenarios", BindingFlags.Public | BindingFlags.NonPublic);
             _gameOverTarget = scenarios == null ? null : scenarios.GetMethod("setGameOverState", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(int), typeof(int), typeof(int) }, null);
             MethodInfo gameOverPrefix = typeof(DiplomacyFeature).GetMethod("DiplomacyGameOverPrefix", BindingFlags.NonPublic | BindingFlags.Static);
-            if (_gameOverTarget == null || _gameOverTarget.ReturnType != typeof(void) || gameOverPrefix == null || TribeR3EventHooks.OnTribeIssueOrderWithTarget.Observable == null || ProjectileR3EventHooks.OnProjectileSpawn.Observable == null || ProjectileR3EventHooks.OnSpawnFire.Observable == null || UnitR3EventHooks.OnUnitTakeMeleeDamage.Observable == null || UnitR3EventHooks.OnUnitTakeProjectileDamage.Observable == null || BuildingR3EventHooks.OnBuildingTileTakeDamage.Observable == null || PlayerR3EventHooks.OnPlayerAIEvaluateAttackOrder.Observable == null || PlayerR3EventHooks.OnPlayerAIRequestGoods.Observable == null || PlayerR3EventHooks.OnPlayerAIEvaluateDefendOrder.Observable == null || PlayerR3EventHooks.OnPlayerAIRequestReceivedGoods.Observable == null || PlayerR3EventHooks.OnPlayerAddResource.Observable == null || PlayerR3EventHooks.OnPlayerSubtractResource.Observable == null || TribeR3EventHooks.OnTribeIssueOrderMoveHere.Observable == null || BuildingR3EventHooks.OnBuildingSpawn.Observable == null || BuildingR3EventHooks.OnBuildWall.Observable == null || BuildingR3EventHooks.OnBuildingDelete.Observable == null || BuildingR3EventHooks.OnWallBulldoze.Observable == null)
+            if (_gameOverTarget == null || _gameOverTarget.ReturnType != typeof(void) || gameOverPrefix == null)
+            {
+                failure = "pinned managed game-over surface is unavailable";
+                return false;
+            }
+#endif
+            if (TribeR3EventHooks.OnTribeIssueOrderWithTarget.Observable == null || ProjectileR3EventHooks.OnProjectileSpawn.Observable == null || ProjectileR3EventHooks.OnSpawnFire.Observable == null || UnitR3EventHooks.OnUnitTakeMeleeDamage.Observable == null || UnitR3EventHooks.OnUnitTakeProjectileDamage.Observable == null || BuildingR3EventHooks.OnBuildingTileTakeDamage.Observable == null || PlayerR3EventHooks.OnPlayerAIEvaluateAttackOrder.Observable == null || PlayerR3EventHooks.OnPlayerAIRequestGoods.Observable == null || PlayerR3EventHooks.OnPlayerAIEvaluateDefendOrder.Observable == null || PlayerR3EventHooks.OnPlayerAIRequestReceivedGoods.Observable == null || PlayerR3EventHooks.OnPlayerAddResource.Observable == null || PlayerR3EventHooks.OnPlayerSubtractResource.Observable == null || TribeR3EventHooks.OnTribeIssueOrderMoveHere.Observable == null || BuildingR3EventHooks.OnBuildingSpawn.Observable == null || BuildingR3EventHooks.OnBuildWall.Observable == null || BuildingR3EventHooks.OnBuildingDelete.Observable == null || BuildingR3EventHooks.OnWallBulldoze.Observable == null)
             {
                 failure = "pinned native diplomacy safety surface is unavailable";
                 return false;
@@ -189,9 +203,19 @@ namespace StrongholdEuropeDE.Runtime
                     PlayerR3EventHooks.OnPlayerAIEvaluateCanSpareGoods.Observable,
                     OnNativeAiCanSpareGoodsEvidence);
 #endif
+#if DIPLOMACY_PRIVATE_TESTS
             MethodInfo prefix = typeof(DiplomacyFeature).GetMethod("DiplomacyGameOverPrefix", BindingFlags.NonPublic | BindingFlags.Static);
             _harmony.Patch(_gameOverTarget, prefix: new HarmonyMethod(prefix));
             _gameOverPatchApplied = true;
+#else
+            if (!_sharedGameOverRegistered)
+            {
+                if (!MissionOverEvents.TryRegister(MissionOverOperation.State, CompatibilityContracts.PluginId,
+                        "diplomacy-game-over", OnSharedGameOverPre, null, out string reason))
+                    throw new InvalidOperationException("Diplomacy game-over interception unavailable: " + reason);
+                _sharedGameOverRegistered = true;
+            }
+#endif
             _diplomacyTribeOrderSubscription = ObservableSubscribeExtensions.Subscribe(TribeR3EventHooks.OnTribeIssueOrderWithTarget.Observable, OnDiplomacyTribeOrder);
             _diplomacyTribeMoveSubscription = ObservableSubscribeExtensions.Subscribe(TribeR3EventHooks.OnTribeIssueOrderMoveHere.Observable, OnTribeMoveOrder);
             _diplomacyProjectileSpawnSubscription = ObservableSubscribeExtensions.Subscribe(ProjectileR3EventHooks.OnProjectileSpawn.Observable, OnDiplomacyProjectileSpawn);
@@ -230,14 +254,24 @@ namespace StrongholdEuropeDE.Runtime
             Dispose(ref _diplomacySpawnFireSubscription);
             Dispose(ref _diplomacyProjectileSpawnSubscription);
             Dispose(ref _diplomacyTribeOrderSubscription);
+#if DIPLOMACY_PRIVATE_TESTS
             if (_gameOverPatchApplied && _gameOverTarget != null)
             {
                 _gameOverPatchApplied = false;
                 _harmony.Unpatch(_gameOverTarget, HarmonyPatchType.Prefix, _harmony.Id);
             }
+#endif
 
             ResetCombatSafetyMapState();
         }
+
+#if !DIPLOMACY_PRIVATE_TESTS
+        private static void OnSharedGameOverPre(MissionOverPreEventArgs args)
+        {
+            if (!args.SkipOriginalFunction && !DiplomacyGameOverPrefix(args.Result))
+                args.SkipOriginalFunction = true;
+        }
+#endif
 
         private static bool DiplomacyGameOverPrefix(int __0)
         {

@@ -60,28 +60,53 @@ namespace StrongholdEuropeDE.Runtime
         private readonly HumanWarIntent[] _humanWarIntents = new HumanWarIntent[9];
         [ThreadStatic]
         private static HumanCommandFrame _humanCommandFrame;
-        private MethodInfo _troopSelectionTarget, _preDllActionsTarget, _diplomacyProbeTarget;
+        private MethodInfo _troopSelectionTarget, _preDllActionsTarget;
+#if DIPLOMACY_PRIVATE_TESTS
+        private MethodInfo _diplomacyProbeTarget;
+#else
+        private static bool _sharedHumanRunRegistered;
+#endif
         private bool PrepareHumanOrders(out string failure)
         {
             _troopSelectionTarget = typeof(EngineInterface).GetMethod("TroopSelection", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(int), typeof(bool), typeof(bool), typeof(int[]), typeof(bool), typeof(bool), typeof(int[]), typeof(int), typeof(int), typeof(bool), typeof(int[]) }, null);
             _preDllActionsTarget = typeof(EditorDirector).GetMethod("preDLLCallActions", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(int).MakeByRefType(), typeof(int).MakeByRefType() }, null);
+            bool ready = _troopSelectionTarget != null && _troopSelectionTarget.ReturnType == typeof(void) &&
+                _preDllActionsTarget != null && _preDllActionsTarget.ReturnType == typeof(void);
+#if DIPLOMACY_PRIVATE_TESTS
             _diplomacyProbeTarget = typeof(EngineInterface).GetMethod("run", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(bool) }, null);
-            failure = _troopSelectionTarget != null && _troopSelectionTarget.ReturnType == typeof(void) && _preDllActionsTarget != null && _preDllActionsTarget.ReturnType == typeof(void) && _diplomacyProbeTarget != null && _diplomacyProbeTarget.ReturnType == typeof(int) ? null : "pinned managed human-order signatures are unavailable";
+            ready = ready && _diplomacyProbeTarget != null && _diplomacyProbeTarget.ReturnType == typeof(int);
+#endif
+            failure = ready ? null : "pinned managed human-order signatures are unavailable";
             return failure == null;
         }
 
         private void ApplyHumanOrders()
         {
+#if !DIPLOMACY_PRIVATE_TESTS
+            if (!_sharedHumanRunRegistered)
+            {
+                if (!APIShared.Simulation.EngineRunEvents.TryRegister(CompatibilityContracts.PluginId,
+                    "diplomacy-human-command-frame", ClearHumanCommandFrame, ClearHumanCommandFrame, out string reason))
+                {
+                    Log("human_orders", "status=shared_run_unavailable|reason=" + Safe(reason));
+                    return;
+                }
+                _sharedHumanRunRegistered = true;
+                Log("human_orders", "status=shared_run_registered");
+            }
+#endif
             BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Static;
             _harmony.Patch(_troopSelectionTarget, prefix: new HarmonyMethod(typeof(DiplomacyFeature).GetMethod("TroopSelectionPrefix", flags)));
             _harmony.Patch(_preDllActionsTarget, postfix: new HarmonyMethod(typeof(DiplomacyFeature).GetMethod("PreDllActionsPostfix", flags)));
-#if DIPLOMACY_PRIVATE_TESTS && HOST_DIRECTED_AI_TRIBE_CANARY && ORIGINAL_POSTTICK_INSTALL_EXPLICITLY_AUTHORIZED
+#if DIPLOMACY_PRIVATE_TESTS
+#if HOST_DIRECTED_AI_TRIBE_CANARY && ORIGINAL_POSTTICK_INSTALL_EXPLICITLY_AUTHORIZED
             // The earlier ordered engine bridge already co-registered both
             // human-order callbacks on this target when it admitted pre-worker.
             // In that case a second Patch would rewrite a live native entry.
             if (!OriginalPreWorkerRegistration.MustRetainRunPatch)
 #endif
                 _harmony.Patch(_diplomacyProbeTarget, prefix: new HarmonyMethod(typeof(DiplomacyFeature).GetMethod("RunBegin", flags)), finalizer: new HarmonyMethod(typeof(DiplomacyFeature).GetMethod("RunEnd", flags)));
+#endif
         }
 
         private void RollbackHumanOrders()
@@ -91,6 +116,7 @@ namespace StrongholdEuropeDE.Runtime
                 _harmony.Unpatch(_troopSelectionTarget, HarmonyPatchType.Prefix, _harmony.Id);
             if (_preDllActionsTarget != null)
                 _harmony.Unpatch(_preDllActionsTarget, HarmonyPatchType.Postfix, _harmony.Id);
+#if DIPLOMACY_PRIVATE_TESTS
             if (_diplomacyProbeTarget != null)
             {
 #if DIPLOMACY_PRIVATE_TESTS && HOST_DIRECTED_AI_TRIBE_CANARY && ORIGINAL_POSTTICK_INSTALL_EXPLICITLY_AUTHORIZED
@@ -104,6 +130,7 @@ namespace StrongholdEuropeDE.Runtime
                 }
             }
 
+#endif
             ClearHumanOrders();
         }
 
@@ -129,6 +156,7 @@ namespace StrongholdEuropeDE.Runtime
             Volatile.Write(ref _treatyIntentTargets, targets);
         }
 
+#if DIPLOMACY_PRIVATE_TESTS
         private static void RunBegin()
         {
             _humanCommandFrame = null;
@@ -139,6 +167,10 @@ namespace StrongholdEuropeDE.Runtime
             _humanCommandFrame = null;
             return __exception;
         }
+
+#else
+        private static void ClearHumanCommandFrame() => _humanCommandFrame = null;
+#endif
 
         private static void TroopSelectionPrefix(int __0, bool __2, bool __4, bool __5, int[] __6)
         {
