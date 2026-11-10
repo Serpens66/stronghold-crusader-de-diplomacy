@@ -59,12 +59,24 @@ Für eine isolierte Prüfung die reguläre DLL mit dem erzeugten `info.json`
 und den bestehenden `assets/Patches` separat installieren.
 Die APIShared-Abhängigkeit wird über das eigene Paket bereitgestellt.
 
-Der reguläre Build benötigt APIShared 0.43.0 und nutzt dessen öffentliche
-Broker für HUD, Spielende und Missionswechsel. Diplomatie veröffentlicht
-geschützte Spielerpaare als Regeln für die gemeinsame native Zielwahl.
+Der reguläre Build benötigt APIShared 0.44.0 und nutzt dessen öffentliche
+Broker für HUD, Spielende, Missionswechsel und Eingaben für Truppenbefehle.
+Diplomatie veröffentlicht geschützte Spielerpaare als Regeln für die gemeinsame
+native Zielwahl.
 Die Rückmeldefrist für Verbündetenbefehle folgt der Simulationsuhr der
-aktuellen Mission. Die native Weiterleitung über den GameAction-Validator
-bleibt bis zu ihrem Audit und einer erfolgreichen regulären Spielprüfung gesperrt.
+aktuellen Mission. Im lokalen Gefecht bindet Diplomatie „Verteidigen“ an den
+aktuellen Verbündeten-HUD-Klick. Der originale HUD-Pfad bleibt erhalten;
+seinen Auftrag sendet Diplomatie nach den Prüfungen genau einmal über den
+gemeinsamen GameAction-Validator. Die Weiterleitung setzt das geprüfte Spiel-
+und Extender-Paar voraus. Andere Befehle behalten ihren bisherigen Pfad.
+GameAction-Regeln, die erst nach der Zurückstellung an die Reihe kämen,
+sehen die Wiederholung auf dem Simulationspfad. Ein Veto dort verhindert
+den Originalaufruf.
+
+Der passive Nachweis eines lokalen Spielstands verwendet `ManagedSaveEvents`.
+Er ordnet den unveränderten SaveData-Callback dem ursprünglichen Aufruf,
+Zielpfad und der aktuellen Mission zu. Die getrennte Save-Schutzbrücke
+bleibt für aktive Schutzpfade bestehen.
 
 Der reguläre Build erzeugt das Paketmanifest im Ausgabeordner aus
 `assets/release/info.json`. Verwende beim Paketieren das erzeugte Manifest,

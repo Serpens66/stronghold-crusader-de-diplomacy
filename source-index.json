@@ -73,7 +73,7 @@
     {
       "path": "Diplomacy/CombatSafety.cs",
       "stage_path": "src/Diplomacy/CombatSafety.cs",
-      "sha256": "5e63358e3a823efb5c962157811016583b5c0d41bbff8d59da44008e74bccc5d"
+      "sha256": "041711f923ee7e89ed439987608f01fdf25336753feb747ecef31db5277243b5"
     },
     {
       "path": "Diplomacy/DiplomacyBreachNotices.cs",
@@ -93,7 +93,7 @@
     {
       "path": "Diplomacy/DiplomacyFeature.cs",
       "stage_path": "src/Diplomacy/DiplomacyFeature.cs",
-      "sha256": "e654f68b383a240907c50b71e39a8c46ab421255e1cebdf840f9d6bedf0557de"
+      "sha256": "08d6d5a440f759a6999f915503558fb131fecedccbd92f2b689c022ccac0972c"
     },
     {
       "path": "Diplomacy/DiplomacyGoodsCommands.cs",
@@ -108,7 +108,7 @@
     {
       "path": "Diplomacy/DiplomacyHumanOrders.cs",
       "stage_path": "src/Diplomacy/DiplomacyHumanOrders.cs",
-      "sha256": "0c9770a75e7ad8e24c1c14ad7786fdfa88166973d07ab5f99a2b1d140f1e64b8"
+      "sha256": "7979ef238c3755211db05a3ce5b4c4d91c12d5f644b6b08d321bcc52e5cccab9"
     },
     {
       "path": "Diplomacy/DiplomacyPresentationEvents.cs",
@@ -423,7 +423,7 @@
     {
       "path": "Military/AllyOrderAcceptance.DevDiag.cs",
       "stage_path": "src/Military/AllyOrderAcceptance.DevDiag.cs",
-      "sha256": "51cf34fe8678d37343a7088b74a946849a6efb523493c406a3e44a06f097c418"
+      "sha256": "726ea176a437e10144ed5c13caf54f00381577d5b793041e3a78fc63c8acb008"
     },
     {
       "path": "Military/HostDirectedAiTribeBridge.cs",
@@ -438,7 +438,7 @@
     {
       "path": "Military/HumanAllyOrderPipeline.cs",
       "stage_path": "src/Military/HumanAllyOrderPipeline.cs",
-      "sha256": "9f021a43c549e2498cf2524aaa4f270825ebd0f4d0c10859621b2dbbf82c0e28"
+      "sha256": "0cce304c0c73bf9c506bf8a953d5a8b0a46b9cfb35403b226215b4429e7e5136"
     },
     {
       "path": "Military/HumanAllyOrderReapplication.cs",
@@ -498,7 +498,7 @@
     {
       "path": "Military/OriginalHumanAllyOrderRules.cs",
       "stage_path": "src/Military/OriginalHumanAllyOrderRules.cs",
-      "sha256": "eda9a88aad43ee21c186d1d57f129326c1567d1d4e37ed17b419d484d76f571a"
+      "sha256": "908f5206e82e3bfd36d8dbdd32595a028cfbb6eda0006a5244be6be5cb0974fb"
     },
     {
       "path": "Military/OriginalPreWorkerRegistration.cs",
@@ -683,7 +683,7 @@
     {
       "path": "Persistence/OriginalGameSaveBridge.cs",
       "stage_path": "src/Persistence/OriginalGameSaveBridge.cs",
-      "sha256": "e122be4ca679a4b5f42b9ff2636f9f33924202c0db2029359f9d4ab38aaccea9"
+      "sha256": "a6db4fc2efb1dcdf0fe9bb0fd74223c53f666d8073737fa1bc6e44b5fb3de244"
     },
     {
       "path": "Persistence/OriginalMultiplayerConsentStateOwner.cs",
@@ -698,7 +698,7 @@
     {
       "path": "Persistence/OriginalSoloSaveReadback.cs",
       "stage_path": "src/Persistence/OriginalSoloSaveReadback.cs",
-      "sha256": "99662974f07524788d0cd9a957d31087b1eb03114d61f159b068f98c7e217f6b"
+      "sha256": "2cd466eff3d61e8d62b7948d0227e5c970fa3098d19e4b51a6d6d28895f37e24"
     },
     {
       "path": "Persistence/PublicMissionSaveAttempt.cs",

@@ -173,10 +173,8 @@ namespace StrongholdEuropeDE.Runtime
         internal static bool HasPositiveCommonTeam(int requesterTeam, int consultedTeam) =>
             requesterTeam > 0 && requesterTeam == consultedTeam;
 
-#if SERP_DEVDIAG
-        internal static bool TryClaimDiagnosticDispatch(ref int claim) =>
+        internal static bool TryClaimDispatch(ref int claim) =>
             System.Threading.Interlocked.Exchange(ref claim, 1) == 0;
-#endif
 
         internal static bool ValidTick(long tick)
         {

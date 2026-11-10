@@ -189,8 +189,10 @@ namespace StrongholdEuropeDE.Runtime
 #endif
             if (!PrepareAllyOrders(out failure))
                 return false;
+#if DIPLOMACY_PRIVATE_TESTS
             if (!PrepareHumanOrders(out failure))
                 return false;
+#endif
             failure = null;
             return true;
         }

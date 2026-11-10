@@ -1547,6 +1547,11 @@ namespace StrongholdEuropeDE.Runtime
                 return;
             lock (owner._gate)
             {
+                if (args.Button == "Defend")
+                {
+                    owner.TryClaimHudDefend(args);
+                    return;
+                }
                 if (!owner.ClaimsAllyPanelButton(args.Panel, args.Button))
                     return;
 
@@ -2171,7 +2176,8 @@ namespace StrongholdEuropeDE.Runtime
                 // native loader returns. End retires ownership but does not
                 // authorize writes to the previous world's player slots.
                 _missionSessionId = 0;
-                Volatile.Write(ref _sharedAllyOrderActive, false);
+                // The image attestation lasts for this process. Mission state and
+                // queued/replaying tickets are retired here, not the shared capability.
                 Volatile.Write(ref _sharedGoodsRequestActive, false);
                 ClearAllyOrders();
                 ResetGoodsRequests();

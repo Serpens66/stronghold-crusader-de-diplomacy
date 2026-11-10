@@ -14,7 +14,7 @@
     },
     {
       "GUID": "APIShared_Serp",
-      "MinimumVersion": "0.43.0"
+      "MinimumVersion": "0.44.0"
     }
   ],
   "MinimumScriptExtenderVersion": "2.14.3"

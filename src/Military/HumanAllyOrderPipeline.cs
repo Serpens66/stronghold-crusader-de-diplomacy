@@ -4,6 +4,11 @@ using System.Reflection;
 using System.Threading;
 using APIShared.Commands;
 using CrusaderDE;
+#if !DIPLOMACY_PRIVATE_TESTS
+using APIShared.Presentation;
+using SHCDESE.Interop.Enums;
+using StrongholdEuropeDE.TradeNegotiation;
+#endif
 using SHCDESE.API;
 using SHCDESE.Interop;
 
@@ -38,8 +43,8 @@ namespace StrongholdEuropeDE.Runtime
             // Strict per-wrapper managed GameAction Post evidence only. Neither
             // callback nor a return value is a native military acceptance ACK.
             // Reset for every attempt, including later safe reapplication.
-#if SERP_DEVDIAG
-            internal int DiagnosticDispatchClaim;
+#if !DIPLOMACY_PRIVATE_TESTS
+            internal int DispatchClaim;
 #endif
             internal bool SharedManagedPostObserved, SharedManagedWasSkipped;
             // Set only by the actual original HUD CancelOrders click for this
@@ -217,7 +222,7 @@ namespace StrongholdEuropeDE.Runtime
 #else
             // A replay already on this thread must still be vetoable when its
             // owner or session was retired between claiming and dispatch.
-            return _dispatchingAllyOrder != null ||
+            return _dispatchingAllyOrder != null || _hudDefendCapture != null ||
                 (owner != null && Volatile.Read(ref owner._sharedGoodsRequestActive));
 #endif
         }
@@ -265,9 +270,14 @@ namespace StrongholdEuropeDE.Runtime
             Volatile.Write(ref _sharedGoodsRequestActive, true);
             Log("gameaction", "status=apishared_shared_owner_active|legacy_parallel_harmony_hook=false");
 #else
-            // The public broker is installed, but native forwarding needs its
-            // own audit and live acceptance in the regular game profile.
-            Log("gameaction", "status=public_validator_registered|native_ally_forwarding=pending_acceptance");
+            // A different game/Extender image keeps its ordinary Vanilla HUD route.
+            bool verified = VerifiedManagedSurface.VerifyGameAssembly(out string provenanceReason) &&
+                VerifiedManagedSurface.VerifyRawraAssembly(out provenanceReason) &&
+                SerpsRawraCompat.AttestedLoadedNativeEngine(out provenanceReason);
+            Volatile.Write(ref _sharedAllyOrderActive, verified);
+            Log("gameaction", verified
+                ? "status=public_validator_registered|native_ally_forwarding=singleplayer_hud_defend"
+                : "status=public_validator_registered|native_ally_forwarding=unavailable|reason=" + Safe(provenanceReason));
 #endif
         }
 
@@ -320,6 +330,19 @@ namespace StrongholdEuropeDE.Runtime
                 return;
             DiplomacyFeature owner = Volatile.Read(ref _activeOwner);
             bool order = call.Command == Enums.GameActionCommand.Ally_Orders;
+#if !DIPLOMACY_PRIVATE_TESTS
+            if (order && _dispatchingAllyOrder == null && _hudDefendCapture is HudDefendCapture capture)
+            {
+                // Consume the first matching invocation even if a previous Pre vetoed it.
+                // Vanilla's nested Back must not grant a second capture opportunity.
+                if (!capture.Entered)
+                {
+                    capture.Entered = true;
+                    call.State = capture;
+                }
+                return;
+            }
+#endif
             if (order && _dispatchingAllyOrder != null && owner == null)
             {
                 call.SkipOriginalFunction = true;
@@ -362,8 +385,7 @@ namespace StrongholdEuropeDE.Runtime
                     if (!Volatile.Read(ref owner._sharedAllyOrderActive))
                         return;
 #else
-                    // Only the DevDiag acceptance driver queues a public
-                    // replay. An ordinary Vanilla ally order passes through.
+                    // Orders outside the explicitly claimed Defend HUD click stay Vanilla.
                     return;
 #endif
                 }
@@ -435,6 +457,17 @@ namespace StrongholdEuropeDE.Runtime
                 return false;
             if (finalCall.Command == Enums.GameActionCommand.Ally_Orders)
             {
+#if !DIPLOMACY_PRIVATE_TESTS
+                if (_dispatchingAllyOrder == null && _hudDefendCapture is HudDefendCapture capture)
+                {
+                    if (ReferenceEquals(finalCall.State, capture) && capture.Request.MatchesOperands(
+                        finalCall.OriginalStructureId, finalCall.OriginalActionState, finalCall.OriginalValue2,
+                        finalCall.StructureId, finalCall.ActionState, finalCall.Value2))
+                        capture.AcceptedForQueue = true;
+                    // Suppress the immediate submission. The replay runs every validator again.
+                    return false;
+                }
+#endif
                 SharedHumanReplayAttempt replay =
                     finalCall.State as SharedHumanReplayAttempt;
                 // An original unbound or non-replay human order still uses its
@@ -1173,14 +1206,10 @@ namespace StrongholdEuropeDE.Runtime
             if (!IsLatestHumanOrder(order))
                 return;
 #if !DIPLOMACY_PRIVATE_TESTS
-            // Acceptance measures one user request. Maintenance must never
-            // submit a second native command for that diagnostic ticket.
-            if (!firstDispatch || !Volatile.Read(ref _sharedAllyOrderActive))
+            // Only a single dispatch per explicitly captured ticket; never reapply it.
+            if (!firstDispatch || !Volatile.Read(ref _sharedAllyOrderActive) ||
+                !OriginalHumanAllyOrderRules.TryClaimDispatch(ref order.DispatchClaim))
                 return;
-#if SERP_DEVDIAG
-            if (!OriginalHumanAllyOrderRules.TryClaimDiagnosticDispatch(ref order.DiagnosticDispatchClaim))
-                return;
-#endif
 #endif
             int player = order.Consulted;
             order.DispatchedDay = Math.Max(0, _lastProcessedDay);
@@ -1240,6 +1269,83 @@ namespace StrongholdEuropeDE.Runtime
         }
 
 #if !DIPLOMACY_PRIVATE_TESTS
+        [ThreadStatic] private static HudDefendCapture _hudDefendCapture;
+
+        private sealed class HudDefendCapture
+        {
+            internal readonly HumanAllyMilitaryRequest Request;
+            internal readonly long Session, Generation, Epoch;
+            internal bool Entered, AcceptedForQueue;
+
+            internal HudDefendCapture(HumanAllyMilitaryRequest request, long session, long generation, long epoch)
+            {
+                Request = request;
+                Session = session;
+                Generation = generation;
+                Epoch = epoch;
+            }
+        }
+
+        // The HUD broker executes the claim only after all button vetos. Keep Vanilla's
+        // actual Defend and nested Back behavior; only its exact GameAction is deferred.
+        private bool TryClaimHudDefend(AllyPanelButtonPreEventArgs args)
+        {
+            var mission = _missionLifecycle?.Current;
+            if (_hudDefendCapture != null || !Volatile.Read(ref _sharedAllyOrderActive) ||
+                !_mapActive || _mapDisabled || _mapBootstrapPending || _tradeTab || _overviewVisible ||
+                !IsCurrentPublicSoloMission(mission) || _missionPlayState.Current?.SessionId != mission.SessionId ||
+                !MainViewModel.viewModelLoaded || !ReferenceEquals(args.Panel, CurrentAlliesPanel()))
+                return false;
+            var view = MainViewModel.Instance;
+            int consulted = SelectedPlayer(args.Panel);
+            var state = GameData.Instance?.lastGameState;
+            if (view == null || !view.AlliesPanelVisible || !view.Allies_OrdersViewVis ||
+                state == null || !OriginalHumanAllyOrderRules.Slot(_localPlayer) ||
+                !OriginalHumanAllyOrderRules.Slot(consulted) || !IsCoalitionAllied(consulted) ||
+                !state.is_valid_player(_localPlayer) || state.is_skirmish_player(_localPlayer) ||
+                !state.is_skirmish_player(consulted) || state.is_valid_player(consulted) ||
+                !HumanAllyMilitaryRequest.TryCreate(_localPlayer, consulted, (int)AIRequestOrderType.DefendMe, 0,
+                    out var request, out _))
+                return false;
+            var capture = new HudDefendCapture(request, mission.SessionId, _sessionGeneration, _mapEpoch);
+            return args.TryClaim(invocation => ExecuteHudDefend(invocation, capture));
+        }
+
+        private bool IsCurrentHudDefend(HudDefendCapture capture)
+        {
+            var mission = _missionLifecycle?.Current;
+            return ReferenceEquals(Volatile.Read(ref _activeOwner), this) &&
+                Volatile.Read(ref _sharedAllyOrderActive) && _mapActive && !_mapDisabled && !_mapBootstrapPending &&
+                IsCurrentPublicSoloMission(mission) && mission.SessionId == capture.Session &&
+                capture.Generation == _sessionGeneration && capture.Epoch == _mapEpoch &&
+                capture.Request.Requester == _localPlayer && IsCoalitionAllied(capture.Request.Consulted);
+        }
+
+        private void ExecuteHudDefend(AllyPanelButtonInvocation invocation, HudDefendCapture capture)
+        {
+            lock (_gate)
+            {
+                if (_hudDefendCapture != null || !IsCurrentHudDefend(capture) ||
+                    !ReferenceEquals(invocation.Panel, CurrentAlliesPanel()) ||
+                    SelectedPlayer(invocation.Panel) != capture.Request.Consulted)
+                    return;
+            }
+            _hudDefendCapture = capture;
+            try { invocation.InvokeOriginal(invocation.Button); }
+            finally { _hudDefendCapture = null; }
+            if (!capture.AcceptedForQueue)
+                return;
+            lock (_gate)
+            {
+                if (!IsCurrentHudDefend(capture))
+                    return;
+                var request = capture.Request;
+                int unused = 0;
+                AllyGameActionPrefix(Enums.GameActionCommand.Ally_Orders, request.Opcode, request.Consulted,
+                    request.Target, ref unused);
+            }
+        }
+
         private bool IsCurrentPublicAllyReplay(HumanAllyOrderAttempt order)
         {
             var mission = _missionLifecycle.Current;

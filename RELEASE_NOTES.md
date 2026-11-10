@@ -1,17 +1,22 @@
 # Änderungen im regulären Entwicklungsstand
 
-- Der reguläre Build benötigt APIShared 0.43.0. Diplomatie und eine kompatible
-  BugfixesAndQoL-Version können denselben nativen Zielwahlfilter nutzen.
+- Der reguläre Build benötigt APIShared 0.44.0. Diplomatie erhält
+  Eingaben für Truppenbefehle über den gemeinsamen Broker und veröffentlicht
+  geschützte Spielerpaare für den gemeinsamen nativen Zielwahlfilter.
 - Ein Angriffsklick auf einen Vertragspartner kann die Waffenruhe beenden
   und den passenden Originalbefehl auslösen. Aktive Waffenruhen werden beim
   Laden eines Spielstands wiederhergestellt.
-- Das Rückmeldefenster für Verbündetenbefehle im regulären Build verwendet
-  die Simulationsuhr der aktuellen Mission.
+- Im lokalen Gefecht leitet Diplomatie „Verteidigen“ aus dem
+  Verbündetenfenster einmal an Vanilla weiter. Die KI entscheidet weiterhin,
+  ob sie den Auftrag annimmt. Das Rückmeldefenster folgt der Simulationsuhr
+  der aktuellen Mission.
+- Diplomatie beobachtet den normalen Einzelspieler-Save über APIShared.
+  Speicherformat und vorhandene Save-Schutzprüfungen bleiben erhalten.
 - Der Build erzeugt die Versionsanforderung im Plugin und das passende
   Manifest aus derselben Abhängigkeitsangabe.
 
 Die gezielten Einzelspielerprüfungen dieses Stands stehen in
-[VALIDIERUNG.md](VALIDIERUNG.md#regulärer-entwicklungsstand-mit-apishared-0430).
+[VALIDIERUNG.md](VALIDIERUNG.md#regulärer-entwicklungsstand-mit-apishared-0440).
 
 # Diplomatie 2.3.11-preview.1
 

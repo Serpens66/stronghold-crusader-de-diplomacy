@@ -72,8 +72,8 @@ invalidRoute = route;
 invalidRoute.TargetAlliedToConsulted = true;
 Require(!OriginalHumanAllyOrderRules.ValidateRoute(order, invalidRoute, out _), "allied target cannot receive an attack");
 int claim = 0;
-Require(OriginalHumanAllyOrderRules.TryClaimDiagnosticDispatch(ref claim), "first replay owns the ticket");
-Require(!OriginalHumanAllyOrderRules.TryClaimDiagnosticDispatch(ref claim), "duplicate replay cannot dispatch");
+Require(OriginalHumanAllyOrderRules.TryClaimDispatch(ref claim), "first replay owns the ticket");
+Require(!OriginalHumanAllyOrderRules.TryClaimDispatch(ref claim), "duplicate replay cannot dispatch");
 object currentReply = new object();
 object expectedReply = currentReply;
 Require(!OriginalHumanAllyOrderRules.TryClaimReplyTimeout(ref currentReply, expectedReply, 8, 8, null) &&
